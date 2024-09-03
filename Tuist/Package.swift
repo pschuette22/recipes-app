@@ -13,10 +13,8 @@ import PackageDescription
 #endif
 
 let package = Package(
-    name: "temp",
+    name: "App",
     dependencies: [
-        // Add your own dependencies here:
-        // .package(url: "https://github.com/Alamofire/Alamofire", from: "5.0.0"),
-        // You can read more about dependencies here: https://docs.tuist.io/documentation/tuist/dependencies
+        .package(url: "https://github.com/pschuette22/AsyncState", from: "0.2.0"),
     ]
 )

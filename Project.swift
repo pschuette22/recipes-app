@@ -18,7 +18,9 @@ let project = Project(
             ),
             sources: ["App/Sources/**"],
             resources: ["App/Resources/**"],
-            dependencies: []
+            dependencies: [
+                .external(name: "AsyncState") 
+            ]
         ),
         .target(
             name: "UnitTests",
@@ -28,7 +30,8 @@ let project = Project(
             infoPlist: .default,
             sources: ["App/UnitTests/**"],
             resources: [],
-            dependencies: [.target(name: "Recipes")]
+            dependencies: [
+                .target(name: "Recipes")]
         ),
     ]
 )
