@@ -22,7 +22,7 @@ struct RecipeFeedState: CollectionViewState {
     }
     
     enum Items: Hashable, Sendable {
-        case category
+        case category(CategoryCell.Configuration)
     }
     
     /// Ordered array of Sections for current state
@@ -47,8 +47,18 @@ extension RecipeFeedState {
         // Add additional customizations as needed
         return snapshot
     }
+    
+    func section(at index: Int) -> Sections {
+        sections[index]
+    }
+    
+    func item(at indexPath: IndexPath) -> Items? {
+        sectionItems[section(at: indexPath.section)]?[indexPath.row]
+    }
 }
 
 extension RecipeFeedState {
-    // TODO: Define transactions
+    mutating func set(categoryCellConfigurations: [CategoryCell.Configuration]) {
+        sectionItems[.categories] = categoryCellConfigurations.map { .category($0) }
+    }
 }

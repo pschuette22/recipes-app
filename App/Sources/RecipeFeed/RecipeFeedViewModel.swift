@@ -71,5 +71,17 @@ extension RecipeFeedViewModel {
     @MainActor
     private func update(categories: [Category]) {
         self.categories = categories
+
+        let configurations = categories.map {
+            CategoryCell.Configuration(
+                url: $0.image,
+                title: $0.title,
+                isSelected: $0.id == selectedCategoryId
+            )
+        }
+
+        self.state.update {
+            $0.set(categoryCellConfigurations: configurations)
+        }
     }
 }

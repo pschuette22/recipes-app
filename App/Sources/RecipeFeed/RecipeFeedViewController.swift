@@ -49,8 +49,9 @@ extension RecipeFeedViewController {
 extension RecipeFeedViewController {
     ///  Prepare subviews for state rendering
     private func setupSubviews() {
-        // TODO: Setup additional subviews
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.register(CategoryCell.self)
+
         view.addSubview(collectionView)
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -65,7 +66,6 @@ extension RecipeFeedViewController {
 
     @MainActor
     func render(_ state: State) {
-        // TODO: Apply any new state changes
         dataSource.apply(state.snapshot, animatingDifferences: true)
     }
 }
@@ -82,12 +82,28 @@ extension RecipeFeedViewController {
     private func makeLayout() -> UICollectionViewLayout {
         // https://developer.apple.com/documentation/uikit/uicollectionviewcompositionallayout
         let configuration = UICollectionViewCompositionalLayoutConfiguration()
-        
         return UICollectionViewCompositionalLayout(
             sectionProvider: { [weak self] sectionIndex, environment in
-                // TODO: return section configuration
-                return nil
-            }, 
+                guard 
+                    let state = self?.viewModel.state
+                else {
+                    return .empty
+                }
+                
+                switch state.section(at: sectionIndex) {
+                case .categories:
+                    let group = NSCollectionLayoutGroup.horizontal(
+                        layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(200)),
+                        subitems: [NSCollectionLayoutItem(
+                            layoutSize: .init(widthDimension: .absolute(180), heightDimension: .absolute(180))
+                        )]
+                    )
+                    group.interItemSpacing = .fixed(16)
+                    return NSCollectionLayoutSection(
+                        group: group
+                    )
+                }
+            },
             configuration: configuration
         )
     }
@@ -95,9 +111,16 @@ extension RecipeFeedViewController {
     private func makeDataSource(for collectionView: UICollectionView) -> DataSource<Sections, Items> {
         DataSource(
             collectionView: collectionView
-        ) { collectionView, indexPath, itemIdentifier in
-            // TODO: turn into configured cells
-            nil
+        ) { [weak self] collectionView, indexPath, itemIdentifier in
+            guard let state = self?.viewModel.state else { return nil }
+            
+            switch state.item(at: indexPath) {
+            case .category(let configuration):
+                // TODO: dependency injection
+                return collectionView.dequeueCell(CategoryCell.self, withConfiguration: configuration, for: indexPath)
+            case .none:
+                return nil
+            }
         }
     }
 }

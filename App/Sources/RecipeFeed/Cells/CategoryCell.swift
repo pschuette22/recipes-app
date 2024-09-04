@@ -34,9 +34,15 @@ final class CategoryCell: UICollectionViewCell, ConfigurableCell {
         imageView.image = RecipesAsset.Assets.categoryPlaceholder.image
         titleLabel.text = nil
     }
+    
+    @MainActor
+    private func setImage(_ image: UIImage) {
+        self.imageView.image = image
+    }
 }
 
-// MARK: - Subview
+// MARK: - Subviews
+
 extension CategoryCell {
     struct Configuration: ViewConfiguration {
         let url: URL
@@ -48,10 +54,12 @@ extension CategoryCell {
         contentView.clipsToBounds = true
 
         contentView.addSubview(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.image = RecipesAsset.Assets.categoryPlaceholder.image
 
         contentView.addSubview(titleLabel)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = UIFont.preferredFont(forTextStyle: .title2)
         titleLabel.numberOfLines = 0
         titleLabel.lineBreakMode = .byWordWrapping
@@ -86,11 +94,7 @@ extension CategoryCell {
 
             self?.setImage(image)
         }
-    }
-    
-
-    @MainActor
-    private func setImage(_ image: UIImage) {
-        self.imageView.image = image
+        
+        // TODO: Category selection
     }
 }
