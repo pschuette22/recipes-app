@@ -47,13 +47,15 @@ extension RecipeFeedViewModel {
     func currentState() -> State {
         state
     }
-}
-
-extension RecipeFeedViewModel {
+    
     func viewDidLoad() {
         fetchCategories()
     }
-    
+}
+
+// MARK: - Category Interactions
+
+extension RecipeFeedViewModel {
     private func fetchCategories() {
         Task { [weak self, recipeService] in
             do {
