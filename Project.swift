@@ -19,7 +19,8 @@ let project = Project(
             sources: ["App/Sources/**"],
             resources: ["App/Resources/**"],
             dependencies: [
-                .external(name: "AsyncState") 
+                .external(name: "AsyncState"),
+                .external(name: "SwiftRequestBuilder")
             ]
         ),
         .target(

@@ -39,6 +39,8 @@ extension RecipeFeedViewController {
 
         setupSubviews()
         startObservingState(renderImmediately: true)
+        
+        viewModel.viewDidLoad()
     }
 }
 
