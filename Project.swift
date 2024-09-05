@@ -32,7 +32,8 @@ let project = Project(
             sources: ["App/UnitTests/**"],
             resources: [],
             dependencies: [
-                .target(name: "Recipes")]
+                .target(name: "Recipes")
+            ]
         ),
     ]
 )

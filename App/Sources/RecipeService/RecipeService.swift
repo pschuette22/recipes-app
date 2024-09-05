@@ -16,21 +16,20 @@ protocol RecipeService {
 final class MealDBService: RecipeService {
     
     private let urlSession: URLSession
-    private let decoder: JSONDecoder
+    private let decoder = JSONDecoder()
     
     init(
-        urlSession: URLSession = .shared,
-        decoder: JSONDecoder = JSONDecoder()
+        urlSession: URLSession = .shared
     ) {
         self.urlSession = urlSession
-        self.decoder = decoder
     }
 }
 
 // MARK: - MealDBService categories
 
 extension MealDBService {
-    struct CategoriesRequestResponse: Response {
+    // Respons Model
+    struct FetchCategoriestResponse: Response {
         struct CategoryRequestItem: Codable, Equatable {
             enum CodingKeys: String, CodingKey {
                 case id = "idCategory"
@@ -63,8 +62,8 @@ extension MealDBService {
             URL(string: "https://www.themealdb.com/api/json/v1/1/categories.php")!
         }
         
-        let (data, response) = try await urlSession.data(for: request)
-        let responseBody = try decoder.decode(CategoriesRequestResponse.self, from: data)
+        let (data, _) = try await urlSession.data(for: request)
+        let responseBody = try decoder.decode(FetchCategoriestResponse.self, from: data)
         
         return responseBody.categories.compactMap { $0.asCategory }
     }

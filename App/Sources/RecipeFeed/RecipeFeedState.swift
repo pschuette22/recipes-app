@@ -22,6 +22,7 @@ struct RecipeFeedState: CollectionViewState {
     }
     
     enum Items: Hashable, Sendable {
+        case contentLoading(ContentLoadingCell.Configuration)
         case category(CategoryCell.Configuration)
     }
     
@@ -30,8 +31,10 @@ struct RecipeFeedState: CollectionViewState {
     
     /// Map of items per section
     private(set) var sectionItems: [Sections: [Items]] = [
-        .categories: []
+        .categories: [.contentLoading(.init(isAnimating: false))]
     ]
+    
+    private(set) var isLoadingCategories: Bool = false
 }
 
 extension RecipeFeedState {
@@ -58,7 +61,13 @@ extension RecipeFeedState {
 }
 
 extension RecipeFeedState {
+    mutating func setCategoryContentLoading() {
+        isLoadingCategories = true
+        sectionItems[.categories] = [.contentLoading(.init(isAnimating: true))]
+    }
+
     mutating func set(categoryCellConfigurations: [CategoryCell.Configuration]) {
+        isLoadingCategories = false
         sectionItems[.categories] = categoryCellConfigurations.map { .category($0) }
     }
 }

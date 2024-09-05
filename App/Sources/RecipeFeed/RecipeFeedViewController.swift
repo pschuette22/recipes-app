@@ -50,6 +50,7 @@ extension RecipeFeedViewController {
     ///  Prepare subviews for state rendering
     private func setupSubviews() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.register(ContentLoadingCell.self)
         collectionView.register(CategoryCell.self)
 
         view.addSubview(collectionView)
@@ -92,10 +93,13 @@ extension RecipeFeedViewController {
                 
                 switch state.section(at: sectionIndex) {
                 case .categories:
+                    let subitemsSize: NSCollectionLayoutSize = state.isLoadingCategories
+                        ? NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+                        : NSCollectionLayoutSize(widthDimension: .absolute(180), heightDimension: .absolute(180))
                     let group = NSCollectionLayoutGroup.horizontal(
                         layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(200)),
                         subitems: [NSCollectionLayoutItem(
-                            layoutSize: .init(widthDimension: .absolute(180), heightDimension: .absolute(180))
+                            layoutSize: subitemsSize
                         )]
                     )
                     group.interItemSpacing = .fixed(16)
@@ -115,6 +119,8 @@ extension RecipeFeedViewController {
             guard let state = self?.viewModel.state else { return nil }
             
             switch state.item(at: indexPath) {
+            case .contentLoading(let configuration):
+                return collectionView.dequeueCell(ContentLoadingCell.self, withConfiguration: configuration, for: indexPath)
             case .category(let configuration):
                 // TODO: dependency injection
                 return collectionView.dequeueCell(CategoryCell.self, withConfiguration: configuration, for: indexPath)
