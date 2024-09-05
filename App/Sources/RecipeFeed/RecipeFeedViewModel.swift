@@ -28,7 +28,7 @@ final class RecipeFeedViewModel: ViewModeling {
         openStateStream
     }
     
-    private var categories: [Category] = []
+    private var categories: [CategoryModel] = []
     private var selectedCategoryId: Int?
     
     required init(
@@ -71,7 +71,7 @@ extension RecipeFeedViewModel {
     }
     
     @MainActor
-    private func update(categories: [Category]) {
+    private func update(categories: [CategoryModel]) {
         self.categories = categories
 
         let configurations = categories.map {

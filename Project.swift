@@ -29,7 +29,7 @@ let project = Project(
             product: .unitTests,
             bundleId: "io.palmtreeprogramming.Recipes.UnitTests",
             infoPlist: .default,
-            sources: ["App/UnitTests/**"],
+            sources: ["App/UnitTests/**", "App/Mocks/**.swift"],
             resources: [],
             dependencies: [
                 .target(name: "Recipes")

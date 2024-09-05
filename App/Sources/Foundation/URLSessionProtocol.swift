@@ -9,7 +9,7 @@ import Foundation
 
 /// @mockable
 protocol URLSessionProtocol {
-    func data(for: URLRequest) async throws -> (Data, URLResponse)
+    func data(for request: URLRequest) async throws -> (Data, URLResponse)
 }
 
 extension URLSession: URLSessionProtocol { }

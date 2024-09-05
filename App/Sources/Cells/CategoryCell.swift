@@ -13,6 +13,7 @@ final class CategoryCell: UICollectionViewCell, ConfigurableCell {
     static let reuseIdentifier = "\(Bundle.main.bundleIdentifier ?? "").CategoryCell"
     
     private lazy var imageView = UIImageView(frame: .zero)
+    private lazy var titleContainer = UIView(frame: .zero)
     private lazy var titleLabel = UILabel(frame: .zero)
     private var imageTask: Task<Void, Never>?
     
@@ -51,20 +52,22 @@ extension CategoryCell {
     }
 
     func setupSubviews() {
-        contentView.clipsToBounds = true
-
         contentView.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.image = RecipesAsset.Assets.categoryPlaceholder.image
+        
+        contentView.addSubview(titleContainer)
+        titleContainer.translatesAutoresizingMaskIntoConstraints = false
+        titleContainer.backgroundColor = UIColor.tertiarySystemBackground.withAlphaComponent(0.8)
 
-        contentView.addSubview(titleLabel)
+        titleContainer.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = UIFont.preferredFont(forTextStyle: .title2)
+        titleLabel.textColor = UIColor.label
         titleLabel.numberOfLines = 0
         titleLabel.lineBreakMode = .byWordWrapping
         titleLabel.textAlignment = .center
-        // TODO: title label styling
         
         NSLayoutConstraint.activate([
             // Pin image to content
@@ -72,10 +75,15 @@ extension CategoryCell {
             imageView.leftAnchor.constraint(equalTo: contentView.leftAnchor),
             imageView.rightAnchor.constraint(equalTo: contentView.rightAnchor),
             imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            // Pin title container to bottom of image
+            titleContainer.leftAnchor.constraint(equalTo: contentView.leftAnchor),
+            titleContainer.rightAnchor.constraint(equalTo: contentView.rightAnchor),
+            titleContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             // Pin title to bottom
-            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
-            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 16),
-            titleLabel.rightAnchor.constraint(lessThanOrEqualTo: contentView.rightAnchor, constant: -16)
+            titleLabel.topAnchor.constraint(equalTo: titleContainer.topAnchor, constant: 8),
+            titleLabel.bottomAnchor.constraint(equalTo: titleContainer.bottomAnchor, constant: -8),
+            titleLabel.leftAnchor.constraint(equalTo: titleContainer.leftAnchor, constant: 8),
+            titleLabel.rightAnchor.constraint(lessThanOrEqualTo: titleContainer.rightAnchor, constant: -8)
         ])
     }
 

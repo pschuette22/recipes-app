@@ -8,18 +8,19 @@
 import Foundation
 import SwiftRequestBuilder
 
+/// @mockable
 protocol RecipeService {
-    func fetchCategories() async throws -> [Category]
+    func fetchCategories() async throws -> [CategoryModel]
 }
 
 /// Handle network interactions with TheMealDB
 final class MealDBService: RecipeService {
     
-    private let urlSession: URLSession
+    private let urlSession: URLSessionProtocol
     private let decoder = JSONDecoder()
     
     init(
-        urlSession: URLSession = .shared
+        urlSession: URLSessionProtocol = URLSession.shared
     ) {
         self.urlSession = urlSession
     }
@@ -43,10 +44,10 @@ extension MealDBService {
             let thumbnailUrl: URL
             let description: String
             
-            var asCategory: Category? {
+            var asCategory: CategoryModel? {
                 guard let id = Int(self.id) else { return nil }
                 
-                return Category(id: id, title: title, image: thumbnailUrl, description: description)
+                return CategoryModel(id: id, title: title, image: thumbnailUrl, description: description)
             }
         }
 
@@ -56,7 +57,7 @@ extension MealDBService {
     
     /// Fetches a list of categories from the backend.
     /// - Returns: An array of category data models
-    func fetchCategories() async throws -> [Category] {
+    func fetchCategories() async throws -> [CategoryModel] {
         let request = URLRequest(EmptyBody.self) {
             HTTPMethod(.get)
             URL(string: "https://www.themealdb.com/api/json/v1/1/categories.php")!

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Category: Hashable {
+struct CategoryModel: Hashable {
     var id: Int
     var title: String
     var image: URL

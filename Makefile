@@ -8,4 +8,4 @@ APP_SRC_DIR=App/Sources/
 MOCKS_OUTPUT_DIR=App/Mocks
 
 mocks:
-	$(MOCKOLO) -s $(APP_SRC_DIR) -d $(MOCKS_OUTPUT_DIR)/Mocks.generated.swift 
+	$(MOCKOLO) -s $(APP_SRC_DIR) -d $(MOCKS_OUTPUT_DIR)/Mocks.generated.swift --header "@testable import Recipes"
