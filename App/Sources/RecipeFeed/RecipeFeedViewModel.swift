@@ -61,7 +61,6 @@ extension RecipeFeedViewModel {
         Task { [weak self, recipeService] in
             do {
                 let categories = try await recipeService.fetchCategories()
-                try? await Task.sleep(for: .seconds(1.5))
                 await self?.update(categories: categories)
             } catch {
                 // TODO: handle errors

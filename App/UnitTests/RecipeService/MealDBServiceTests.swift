@@ -27,7 +27,7 @@ final class MealDBServiceTests: XCTestCase {
     
     private func fetchCategoryResponse_success() throws -> Data {
         guard
-            let url = UnitTestsResources.bundle.url(forResource: "GetCategories-success", withExtension: "json"),
+            let url = Bundle.module.url(forResource: "GetCategories-success", withExtension: "json"),
             let data = FileManager.default.contents(atPath: url.path())
         else {
             throw TestError.failedToLoadResource(name: "GetCategory-success.json")

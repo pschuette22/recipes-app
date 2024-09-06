@@ -33,8 +33,6 @@ let project = Project(
             resources: ["App/TestFixtures/**"],
             dependencies: [
                 .target(name: "Recipes"),
-                .external(name: "SwiftRequestBuilder"),
-                .external(name: "SwiftRequestBuilderTestHelpers")
             ]
         ),
     ]
