@@ -17,6 +17,15 @@
         "revision" : "2bc86522d115234d1f588efe2bcb4ce4be8f8b82",
         "version" : "510.0.3"
       }
+    },
+    {
+      "identity" : "swiftrequestbuilder",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pschuette22/SwiftRequestBuilder",
+      "state" : {
+        "revision" : "ff881e2636e246f5ce205bc9d2cf8ad833e0eda5",
+        "version" : "2.1.2"
+      }
     }
   ],
   "version" : 2

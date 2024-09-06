@@ -16,5 +16,6 @@ let package = Package(
     name: "App",
     dependencies: [
         .package(url: "https://github.com/pschuette22/AsyncState", from: "0.2.0"),
+        .package(url: "https://github.com/pschuette22/SwiftRequestBuilder", from: "2.1.2"),
     ]
 )

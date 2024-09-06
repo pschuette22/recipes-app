@@ -19,7 +19,8 @@ let project = Project(
             sources: ["App/Sources/**"],
             resources: ["App/Resources/**"],
             dependencies: [
-                .external(name: "AsyncState") 
+                .external(name: "AsyncState"),
+                .external(name: "SwiftRequestBuilder")
             ]
         ),
         .target(
@@ -28,10 +29,11 @@ let project = Project(
             product: .unitTests,
             bundleId: "io.palmtreeprogramming.Recipes.UnitTests",
             infoPlist: .default,
-            sources: ["App/UnitTests/**"],
-            resources: [],
+            sources: ["App/UnitTests/**", "App/Mocks/**.swift"],
+            resources: ["App/TestFixtures/**"],
             dependencies: [
-                .target(name: "Recipes")]
+                .target(name: "Recipes"),
+            ]
         ),
     ]
 )

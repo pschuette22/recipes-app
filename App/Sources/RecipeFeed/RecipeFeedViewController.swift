@@ -39,6 +39,8 @@ extension RecipeFeedViewController {
 
         setupSubviews()
         startObservingState(renderImmediately: true)
+        
+        viewModel.viewDidLoad()
     }
 }
 
@@ -47,8 +49,10 @@ extension RecipeFeedViewController {
 extension RecipeFeedViewController {
     ///  Prepare subviews for state rendering
     private func setupSubviews() {
-        // TODO: Setup additional subviews
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.register(ContentLoadingCell.self)
+        collectionView.register(CategoryCell.self)
+
         view.addSubview(collectionView)
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -63,7 +67,6 @@ extension RecipeFeedViewController {
 
     @MainActor
     func render(_ state: State) {
-        // TODO: Apply any new state changes
         dataSource.apply(state.snapshot, animatingDifferences: true)
     }
 }
@@ -80,12 +83,35 @@ extension RecipeFeedViewController {
     private func makeLayout() -> UICollectionViewLayout {
         // https://developer.apple.com/documentation/uikit/uicollectionviewcompositionallayout
         let configuration = UICollectionViewCompositionalLayoutConfiguration()
-        
         return UICollectionViewCompositionalLayout(
             sectionProvider: { [weak self] sectionIndex, environment in
-                // TODO: return section configuration
-                return nil
-            }, 
+                guard 
+                    let state = self?.viewModel.state
+                else {
+                    return .empty
+                }
+                
+                switch state.section(at: sectionIndex) {
+                case .categories:
+                    let count = state.sectionItems[.categories]?.count ?? 1
+                    let itemSize: NSCollectionLayoutSize = state.isLoadingCategories
+                        ? NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(200))
+                        : NSCollectionLayoutSize(widthDimension: .absolute(180), heightDimension: .absolute(180))
+                    let group = NSCollectionLayoutGroup.horizontal(
+                        layoutSize: itemSize,
+                        subitems: [NSCollectionLayoutItem(
+                            layoutSize: itemSize
+                        )]
+                    )
+                    let section = NSCollectionLayoutSection(
+                        group: group
+                    )
+                    section.contentInsets = .init(top: 16, leading: 16, bottom: 16, trailing: 16)
+                    section.interGroupSpacing = 16.0
+                    section.orthogonalScrollingBehavior = .continuous
+                    return section
+                }
+            },
             configuration: configuration
         )
     }
@@ -93,9 +119,18 @@ extension RecipeFeedViewController {
     private func makeDataSource(for collectionView: UICollectionView) -> DataSource<Sections, Items> {
         DataSource(
             collectionView: collectionView
-        ) { collectionView, indexPath, itemIdentifier in
-            // TODO: turn into configured cells
-            nil
+        ) { [weak self] collectionView, indexPath, itemIdentifier in
+            guard let state = self?.viewModel.state else { return nil }
+            
+            switch state.item(at: indexPath) {
+            case .contentLoading(let configuration):
+                return collectionView.dequeueCell(ContentLoadingCell.self, withConfiguration: configuration, for: indexPath)
+            case .category(let configuration):
+                // TODO: dependency injection
+                return collectionView.dequeueCell(CategoryCell.self, withConfiguration: configuration, for: indexPath)
+            case .none:
+                return nil
+            }
         }
     }
 }

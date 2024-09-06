@@ -22,7 +22,8 @@ struct RecipeFeedState: CollectionViewState {
     }
     
     enum Items: Hashable, Sendable {
-        case category
+        case contentLoading(ContentLoadingCell.Configuration)
+        case category(CategoryCell.Configuration)
     }
     
     /// Ordered array of Sections for current state
@@ -30,8 +31,10 @@ struct RecipeFeedState: CollectionViewState {
     
     /// Map of items per section
     private(set) var sectionItems: [Sections: [Items]] = [
-        .categories: []
+        .categories: [.contentLoading(.init(isAnimating: false))]
     ]
+    
+    private(set) var isLoadingCategories: Bool = false
 }
 
 extension RecipeFeedState {
@@ -47,8 +50,24 @@ extension RecipeFeedState {
         // Add additional customizations as needed
         return snapshot
     }
+    
+    func section(at index: Int) -> Sections {
+        sections[index]
+    }
+    
+    func item(at indexPath: IndexPath) -> Items? {
+        sectionItems[section(at: indexPath.section)]?[indexPath.row]
+    }
 }
 
 extension RecipeFeedState {
-    // TODO: Define transactions
+    mutating func setIsLoadingCategories() {
+        isLoadingCategories = true
+        sectionItems[.categories] = [.contentLoading(.init(isAnimating: true))]
+    }
+
+    mutating func setDidLoadCategories(withConfigurations cellConfigurations: [CategoryCell.Configuration]) {
+        isLoadingCategories = false
+        sectionItems[.categories] = cellConfigurations.map { .category($0) }
+    }
 }
