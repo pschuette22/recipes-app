@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pschuette22/SwiftRequestBuilder",
       "state" : {
-        "revision" : "db39b9163806f7881c8a408db5d5b9c4b08cc68e",
-        "version" : "2.0.1"
+        "revision" : "ff881e2636e246f5ce205bc9d2cf8ad833e0eda5",
+        "version" : "2.1.2"
       }
     }
   ],

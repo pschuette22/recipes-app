@@ -30,9 +30,11 @@ let project = Project(
             bundleId: "io.palmtreeprogramming.Recipes.UnitTests",
             infoPlist: .default,
             sources: ["App/UnitTests/**", "App/Mocks/**.swift"],
-            resources: [],
+            resources: ["App/TestFixtures/**"],
             dependencies: [
-                .target(name: "Recipes")
+                .target(name: "Recipes"),
+                .external(name: "SwiftRequestBuilder"),
+                .external(name: "SwiftRequestBuilderTestHelpers")
             ]
         ),
     ]
