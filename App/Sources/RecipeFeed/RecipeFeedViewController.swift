@@ -93,19 +93,23 @@ extension RecipeFeedViewController {
                 
                 switch state.section(at: sectionIndex) {
                 case .categories:
-                    let subitemsSize: NSCollectionLayoutSize = state.isLoadingCategories
-                        ? NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+                    let count = state.sectionItems[.categories]?.count ?? 1
+                    let itemSize: NSCollectionLayoutSize = state.isLoadingCategories
+                        ? NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(200))
                         : NSCollectionLayoutSize(widthDimension: .absolute(180), heightDimension: .absolute(180))
                     let group = NSCollectionLayoutGroup.horizontal(
-                        layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(200)),
+                        layoutSize: itemSize,
                         subitems: [NSCollectionLayoutItem(
-                            layoutSize: subitemsSize
+                            layoutSize: itemSize
                         )]
                     )
-                    group.interItemSpacing = .fixed(16)
-                    return NSCollectionLayoutSection(
+                    let section = NSCollectionLayoutSection(
                         group: group
                     )
+                    section.contentInsets = .init(top: 16, leading: 16, bottom: 16, trailing: 16)
+                    section.interGroupSpacing = 16.0
+                    section.orthogonalScrollingBehavior = .continuous
+                    return section
                 }
             },
             configuration: configuration

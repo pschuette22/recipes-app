@@ -52,6 +52,7 @@ extension CategoryCell {
     }
 
     func setupSubviews() {
+        clipsToBounds = true
         contentView.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
