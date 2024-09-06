@@ -57,7 +57,7 @@ extension RecipeFeedViewModel {
 
 extension RecipeFeedViewModel {
     private func fetchCategories() {
-        state.setCategoryContentLoading()
+        state.setIsLoadingCategories()
         Task { [weak self, recipeService] in
             do {
                 let categories = try await recipeService.fetchCategories()
@@ -83,7 +83,7 @@ extension RecipeFeedViewModel {
         }
 
         self.state.update {
-            $0.set(categoryCellConfigurations: configurations)
+            $0.setDidLoadCategories(withConfigurations: configurations)
         }
     }
 }

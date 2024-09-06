@@ -61,13 +61,13 @@ extension RecipeFeedState {
 }
 
 extension RecipeFeedState {
-    mutating func setCategoryContentLoading() {
+    mutating func setIsLoadingCategories() {
         isLoadingCategories = true
         sectionItems[.categories] = [.contentLoading(.init(isAnimating: true))]
     }
 
-    mutating func set(categoryCellConfigurations: [CategoryCell.Configuration]) {
+    mutating func setDidLoadCategories(withConfigurations cellConfigurations: [CategoryCell.Configuration]) {
         isLoadingCategories = false
-        sectionItems[.categories] = categoryCellConfigurations.map { .category($0) }
+        sectionItems[.categories] = cellConfigurations.map { .category($0) }
     }
 }
