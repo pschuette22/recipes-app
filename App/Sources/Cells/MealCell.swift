@@ -12,8 +12,10 @@ import UIKit
 final class MealCell: UICollectionViewCell, ConfigurableCell {
     static let reuseIdentifier = "\(Bundle.main.bundleIdentifier ?? "").MealCell"
     
-    private lazy var imageView = UIImageView(frame: .zero)
-    private lazy var titleLabel = UILabel(frame: .zero)
+    @ExplicitlyConstrained
+    private var imageView = UIImageView(frame: .zero)
+    @ExplicitlyConstrained
+    private var titleLabel = UILabel(frame: .zero)
     private var imageTask: Task<Void, Error>?
     
     override init(frame: CGRect) {
@@ -58,11 +60,11 @@ extension MealCell {
         
         NSLayoutConstraint.activate([
             // Image constraints
-            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            imageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
-            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-            imageView.heightAnchor.constraint(equalToConstant: 150),
-            imageView.widthAnchor.constraint(equalToConstant: 150),
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+            imageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 16),
+            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
+            imageView.heightAnchor.constraint(equalToConstant: 100),
+            imageView.widthAnchor.constraint(equalToConstant: 100),
             // Title Constraints
             titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             titleLabel.leftAnchor.constraint(equalTo: imageView.rightAnchor, constant: 16),
@@ -85,6 +87,6 @@ extension MealCell {
             else { return }
 
             self?.setImage(image)
-        }        
+        }
     }
 }

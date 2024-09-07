@@ -29,7 +29,10 @@ final class RecipeFeedViewModel: ViewModeling {
     }
     
     private var categories: [CategoryModel] = []
-    private var selectedCategoryId: Int?
+    private var selectedCategoryIndex: Int = 0
+    
+    private var fetchMealsTask: Task<Void, Error>?
+    private var meals: [MealSummaryModel] = []
     
     required init(
         _ initialState: State = .init(),
@@ -77,12 +80,42 @@ extension RecipeFeedViewModel {
             CategoryCell.Configuration(
                 image: $0.image,
                 title: $0.title,
-                isSelected: $0.id == selectedCategoryId
+                isSelected: $0.id == categories[safe: selectedCategoryIndex]?.id
             )
         }
 
-        self.state.update {
+        state.update {
             $0.setDidLoadCategories(withConfigurations: configurations)
+        }
+        
+        fetchMeals()
+    }
+    
+    private func fetchMeals() {
+        guard let category = categories[safe: selectedCategoryIndex] else { return /* Error? */ }
+
+        state.setIsLoadingMeals()
+        fetchMealsTask?.cancel()
+        
+        fetchMealsTask = Task { [weak self, recipeService] in
+            do {
+                let meals = try await recipeService.fetchMeals(in: category)
+                await self?.update(meals: meals)
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    @MainActor
+    private func update(meals: [MealSummaryModel]) {
+        self.meals = meals
+        let configurations = meals.map {
+            MealCell.Configuration(image: $0.image, title: $0.title)
+        }
+        
+        state.update {
+            $0.setDidLoadMeals(withConfigurations: configurations)
         }
     }
 }

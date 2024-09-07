@@ -11,6 +11,7 @@ import SwiftRequestBuilder
 /// @mockable
 protocol RecipeService {
     func fetchCategories() async throws -> [CategoryModel]
+    func fetchMeals(in category: CategoryModel) async throws -> [MealSummaryModel]
 }
 
 /// Handle network interactions with TheMealDB

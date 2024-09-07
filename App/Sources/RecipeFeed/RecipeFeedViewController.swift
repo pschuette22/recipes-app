@@ -52,6 +52,7 @@ extension RecipeFeedViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(ContentLoadingCell.self)
         collectionView.register(CategoryCell.self)
+        collectionView.register(MealCell.self)
 
         view.addSubview(collectionView)
         NSLayoutConstraint.activate([
@@ -93,7 +94,6 @@ extension RecipeFeedViewController {
                 
                 switch state.section(at: sectionIndex) {
                 case .categories:
-                    let count = state.sectionItems[.categories]?.count ?? 1
                     let itemSize: NSCollectionLayoutSize = state.isLoadingCategories
                         ? NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(200))
                         : NSCollectionLayoutSize(widthDimension: .absolute(180), heightDimension: .absolute(180))
@@ -108,6 +108,19 @@ extension RecipeFeedViewController {
                     )
                     section.contentInsets = .init(top: 16, leading: 16, bottom: 16, trailing: 16)
                     section.interGroupSpacing = 16.0
+                    section.orthogonalScrollingBehavior = .continuous
+                    return section
+                case .meals:
+                    let itemSize: NSCollectionLayoutSize = state.isLoadingMeals
+                        ? NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+                        : NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(132)) // 150 + 16 * 2
+                    let group = NSCollectionLayoutGroup.vertical(
+                        layoutSize: itemSize,
+                        subitems: [NSCollectionLayoutItem(
+                            layoutSize: itemSize
+                        )]
+                    )
+                    let section = NSCollectionLayoutSection(group: group)
                     section.orthogonalScrollingBehavior = .continuous
                     return section
                 }
@@ -126,8 +139,9 @@ extension RecipeFeedViewController {
             case .contentLoading(let configuration):
                 return collectionView.dequeueCell(ContentLoadingCell.self, withConfiguration: configuration, for: indexPath)
             case .category(let configuration):
-                // TODO: dependency injection
                 return collectionView.dequeueCell(CategoryCell.self, withConfiguration: configuration, for: indexPath)
+            case .meal(let configuration):
+                return collectionView.dequeueCell(MealCell.self, withConfiguration: configuration, for: indexPath)
             case .none:
                 return nil
             }

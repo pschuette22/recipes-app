@@ -12,9 +12,12 @@ import UIKit
 final class CategoryCell: UICollectionViewCell, ConfigurableCell {
     static let reuseIdentifier = "\(Bundle.main.bundleIdentifier ?? "").CategoryCell"
     
-    private lazy var imageView = UIImageView(frame: .zero)
-    private lazy var titleContainer = UIView(frame: .zero)
-    private lazy var titleLabel = UILabel(frame: .zero)
+    @ExplicitlyConstrained
+    private var imageView = UIImageView(frame: .zero)
+    @ExplicitlyConstrained
+    private var titleContainer = UIView(frame: .zero)
+    @ExplicitlyConstrained
+    private var titleLabel = UILabel(frame: .zero)
     private var imageTask: Task<Void, Never>?
     
     
@@ -104,6 +107,9 @@ extension CategoryCell {
             self?.setImage(image)
         }
         
-        // TODO: Category selection
+        if configuration.isSelected {
+            contentView.layer.borderColor = UIColor.systemGroupedBackground.cgColor
+            contentView.layer.borderWidth = 8
+        }
     }
 }
