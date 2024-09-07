@@ -46,7 +46,7 @@ final class CategoryCell: UICollectionViewCell, ConfigurableCell {
 
 extension CategoryCell {
     struct Configuration: ViewConfiguration {
-        let url: URL
+        let image: URL
         let title: String
         let isSelected: Bool
     }
@@ -92,7 +92,7 @@ extension CategoryCell {
         titleLabel.text = configuration.title
         imageTask = Task { [weak self] in
             let imageRequest = URLRequest(
-                url: configuration.url,
+                url: configuration.image,
                 cachePolicy: .returnCacheDataElseLoad
             )
 

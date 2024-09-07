@@ -75,7 +75,7 @@ extension RecipeFeedViewModel {
 
         let configurations = categories.map {
             CategoryCell.Configuration(
-                url: $0.image,
+                image: $0.image,
                 title: $0.title,
                 isSelected: $0.id == selectedCategoryId
             )
