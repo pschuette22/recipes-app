@@ -15,7 +15,10 @@ final class RecipeFeedViewModelTests: XCTestCase {
     
     override func setUp() {
         service = .init()
-        viewModel = RecipeFeedViewModel(recipeService: service)
+        viewModel = RecipeFeedViewModel(
+            selectedCategoryIndex: -1,
+            recipeService: service
+        )
     }
     
     func testViewDidLoad_fetchesCategories() async throws {

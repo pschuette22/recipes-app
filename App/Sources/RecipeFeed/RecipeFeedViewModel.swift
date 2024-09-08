@@ -28,17 +28,21 @@ final class RecipeFeedViewModel: ViewModeling {
         openStateStream
     }
     
+    // Category Management
     private var categories: [CategoryModel] = []
-    private var selectedCategoryIndex: Int = 0
+    private var selectedCategoryIndex: Int
     
+    // Meal Management
     private var fetchMealsTask: Task<Void, Error>?
     private var meals: [MealSummaryModel] = []
     
     required init(
         _ initialState: State = .init(),
+        selectedCategoryIndex: Int = 0,
         recipeService: any RecipeService = MealDBService()
     ) {
         state = initialState
+        self.selectedCategoryIndex = selectedCategoryIndex
         self.recipeService = recipeService
     }
 }
@@ -90,9 +94,14 @@ extension RecipeFeedViewModel {
         
         fetchMeals()
     }
-    
-    private func fetchMeals() {
-        guard let category = categories[safe: selectedCategoryIndex] else { return /* Error? */ }
+}
+
+// MARK: - Meal Interactions 
+
+extension RecipeFeedViewModel {
+    ///  Fetches meals for the selected category
+    func fetchMeals() {
+        guard let category = categories[safe: selectedCategoryIndex] else { return }
 
         state.setIsLoadingMeals()
         fetchMealsTask?.cancel()

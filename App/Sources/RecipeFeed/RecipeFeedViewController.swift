@@ -112,7 +112,7 @@ extension RecipeFeedViewController {
                     return section
                 case .meals:
                     let itemSize: NSCollectionLayoutSize = state.isLoadingMeals
-                        ? NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+                        ? NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(environment.container.contentSize.height - 200))
                         : NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(132)) // 150 + 16 * 2
                     let group = NSCollectionLayoutGroup.vertical(
                         layoutSize: itemSize,
