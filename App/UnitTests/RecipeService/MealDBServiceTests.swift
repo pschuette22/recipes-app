@@ -51,11 +51,16 @@ final class MealDBServiceTests: XCTestCase {
         XCTAssertEqual(meals[1].title, "Cajun spiced fish tacos")
     }
     
-    func testDecodeMealItemResponse() async throws {
+    func testFetchMealById_withSuccess_retrievesMealDetails() async throws {
         let data = try Fixture.data(forResource: "GetMeal-success", withExtension: "json")
-        let response = try JSONDecoder().decode(MealDBService.FetchMealDetailsResponse.self, from: data)
-        
-        XCTAssertEqual(response.meals.first?.ingredients.count, 7)
+
+        sessionMock.dataHandler = { request in
+            XCTAssertEqual(request.url?.absoluteString, "https://www.themealdb.com/api/json/v1/1/lookup.php?i=123")
+            return (data, .mock(status: 200))
+        }
+        let meal = try await service.fetchMeal(withId: 123)
+        XCTAssertEqual(meal.title, "Baked salmon with fennel & tomatoes")
+        XCTAssertEqual(meal.ingredients.count, 7)
     }
 }
 

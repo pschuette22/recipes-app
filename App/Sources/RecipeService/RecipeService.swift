@@ -183,7 +183,7 @@ extension MealDBService {
     func fetchMeal(withId id: Int) async throws -> MealDetailModel {
         let request = URLRequest(EmptyBody.self) {
             HTTPMethod(.get)
-            URL(string: "www.themealdb.com/api/json/v1/1/lookup.php")!
+            URL(string: "https://www.themealdb.com/api/json/v1/1/lookup.php")!
             QueryItem("i", value: id)
         }
         
