@@ -151,7 +151,6 @@ extension RecipeFeedViewController {
 // MARK: - UICollectionViewDelegate
 
 extension RecipeFeedViewController: UICollectionViewDelegate {
-
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if viewModel.state.sections[safe: indexPath.section] == .categories {
             viewModel.didSelectCategory(at: indexPath.row)

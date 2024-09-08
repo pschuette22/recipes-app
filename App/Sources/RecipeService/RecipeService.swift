@@ -12,6 +12,7 @@ import SwiftRequestBuilder
 protocol RecipeService {
     func fetchCategories() async throws -> [CategoryModel]
     func fetchMeals(in category: CategoryModel) async throws -> [MealSummaryModel]
+    func fetchMeal(withId id: Int) async throws -> MealDetailModel
 }
 
 /// Handle network interactions with TheMealDB
@@ -119,6 +120,10 @@ extension MealDBService {
             struct IngredientItem: Codable, Equatable {
                 var ingredient: String
                 var measurement: String
+                
+                var asIngredientModel: MealDetailModel.Ingredient {
+                    .init(title: ingredient, measurement: measurement)
+                }
             }
 
             enum CodingKeys: String, CodingKey {
@@ -174,7 +179,36 @@ extension MealDBService {
         @Lossy
         var meals: [MealItem]
     }
+    
+    func fetchMeal(withId id: Int) async throws -> MealDetailModel {
+        let request = URLRequest(EmptyBody.self) {
+            HTTPMethod(.get)
+            URL(string: "www.themealdb.com/api/json/v1/1/lookup.php")!
+            QueryItem("i", value: id)
+        }
+        
+        let (data, _) = try await urlSession.data(for: request)
+        let responseBody = try decoder.decode(FetchMealDetailsResponse.self, from: data)
+        
+        guard let mealDetails = responseBody.meals.first.map({
+            MealDetailModel(
+                id: $0.id,
+                title: $0.title,
+                instructions: $0.instructions,
+                imageURL: $0.thumbnailURL,
+                youtube: $0.youtubeURL,
+                ingredients: $0.ingredients.map { $0.asIngredientModel },
+                source: $0.sourceURL
+            )
+        }) else {
+            throw ServiceError.malformedResponse(request)
+        }
+        
+        return mealDetails
+    }
 }
+
+// MARK: - Optional<String> + helpers
 
 private extension Optional where Wrapped == String {
     var safelyUnwrapped: String? {
