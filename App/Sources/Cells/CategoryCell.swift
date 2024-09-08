@@ -37,6 +37,7 @@ final class CategoryCell: UICollectionViewCell, ConfigurableCell {
         imageTask?.cancel()
         imageView.image = RecipesAsset.Assets.categoryPlaceholder.image
         titleLabel.text = nil
+        set(isSelected: false)
     }
     
     @MainActor
@@ -56,6 +57,7 @@ extension CategoryCell {
 
     func setupSubviews() {
         clipsToBounds = true
+        contentView.layer.borderColor = UIColor.systemGroupedBackground.cgColor
         contentView.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
@@ -107,9 +109,10 @@ extension CategoryCell {
             self?.setImage(image)
         }
         
-        if configuration.isSelected {
-            contentView.layer.borderColor = UIColor.systemGroupedBackground.cgColor
-            contentView.layer.borderWidth = 8
-        }
+        set(isSelected: configuration.isSelected)
+    }
+    
+    private func set(isSelected: Bool) {
+        contentView.layer.borderWidth = isSelected ? 8 : 0
     }
 }
