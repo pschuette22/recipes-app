@@ -12,7 +12,8 @@ import UIKit
 final class ContentLoadingCell: UICollectionViewCell, ConfigurableCell {
     static let reuseIdentifier = "\(Bundle.main.bundleIdentifier ?? "").ContentLoadingCell"
     
-    private lazy var activityIndicator = UIActivityIndicatorView(style: .large)
+    @ExplicitConstraints
+    private var activityIndicator = UIActivityIndicatorView(style: .large)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,14 +34,11 @@ final class ContentLoadingCell: UICollectionViewCell, ConfigurableCell {
 
 // MARK: - Subview
 extension ContentLoadingCell {
-    // TODO: Define transactions
     struct Configuration: ViewConfiguration {
         var isAnimating: Bool
     }
 
     func setupSubviews() {
-        // TODO: Setup Subviews
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(activityIndicator)
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),

@@ -50,6 +50,13 @@ final class MealDBServiceTests: XCTestCase {
         XCTAssertEqual(meals[1].id, 52819)
         XCTAssertEqual(meals[1].title, "Cajun spiced fish tacos")
     }
+    
+    func testDecodeMealItemResponse() async throws {
+        let data = try Fixture.data(forResource: "GetMeal-success", withExtension: "json")
+        let response = try JSONDecoder().decode(MealDBService.FetchMealDetailsResponse.self, from: data)
+        
+        XCTAssertEqual(response.meals.first?.ingredients.count, 7)
+    }
 }
 
 

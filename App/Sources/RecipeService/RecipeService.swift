@@ -112,3 +112,76 @@ extension MealDBService {
         return responseBody.meals.compactMap { $0.asMeal }
     }
 }
+
+extension MealDBService {
+    struct FetchMealDetailsResponse: Response {
+        struct MealItem: Codable, Equatable {
+            struct IngredientItem: Codable, Equatable {
+                var ingredient: String
+                var measurement: String
+            }
+
+            enum CodingKeys: String, CodingKey {
+                case id = "idMeal"
+                case title = "strMeal"
+                case instructions = "strInstructions"
+                case thumbnailURL = "strMealThumb"
+                case youtubeURL = "strYoutube"
+                case sourceURL = "strSource"
+            }
+            
+            var id: Int
+            var title: String
+            var instructions: String
+            var thumbnailURL: URL
+            var youtubeURL: URL?
+            var sourceURL: URL?
+            var ingredients = [IngredientItem]()
+            
+            init(from decoder: any Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                guard let id = Int(try container.decode(String.self, forKey: .id)) else {
+                    var codingPath = decoder.codingPath
+                    codingPath.append(CodingKeys.id)
+                    throw DecodingError.valueNotFound(
+                        String.self,
+                        DecodingError.Context(codingPath: codingPath, debugDescription: "required `idMeal` is missing.")
+                    )
+                }
+                
+                self.id = id
+                self.title = try container.decode(String.self, forKey: .title)
+                self.instructions = try container.decode(String.self, forKey: .instructions)
+                self.thumbnailURL = try container.decode(URL.self, forKey: .thumbnailURL)
+                self.youtubeURL = try? container.decode(URL.self, forKey: .youtubeURL)
+                self.sourceURL = try? container.decode(URL.self, forKey: .sourceURL)
+
+                let ingredientsContainer = try decoder.singleValueContainer()
+                let dictionary = try ingredientsContainer.decode([String: String?].self)
+                let ingredientPrefix = "strIngredient"
+                for (key, value) in dictionary where key.hasPrefix(ingredientPrefix) && (value?.count ?? 0) > 0 {
+                    let suffix = key.dropFirst(ingredientPrefix.count)
+                    guard
+                        let unwrappedValue = value.safelyUnwrapped,
+                        let measurement = dictionary["strMeasure" + suffix]?.safelyUnwrapped
+                    else { continue }
+                    ingredients.append(.init(ingredient: unwrappedValue, measurement: measurement))
+                }
+            }
+                        
+        }
+        
+        var meals: [MealItem]
+    }
+}
+
+private extension Optional where Wrapped == String {
+    var safelyUnwrapped: String? {
+        switch self {
+        case .none:
+            return nil
+        case .some(let str):
+            return str
+        }
+    }
+}
