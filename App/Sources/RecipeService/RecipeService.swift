@@ -171,6 +171,7 @@ extension MealDBService {
                         
         }
         
+        @Lossy
         var meals: [MealItem]
     }
 }
