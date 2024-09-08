@@ -12,12 +12,15 @@ import UIKit
 final class CategoryCell: UICollectionViewCell, ConfigurableCell {
     static let reuseIdentifier = "\(Bundle.main.bundleIdentifier ?? "").CategoryCell"
     
-    @ExplicitlyConstrained
+    @ExplicitConstraints
     private var imageView = UIImageView(frame: .zero)
-    @ExplicitlyConstrained
+
+    @ExplicitConstraints
     private var titleContainer = UIView(frame: .zero)
-    @ExplicitlyConstrained
+
+    @ExplicitConstraints
     private var titleLabel = UILabel(frame: .zero)
+
     private var imageTask: Task<Void, Never>?
     
     

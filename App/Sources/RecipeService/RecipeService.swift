@@ -12,6 +12,7 @@ import SwiftRequestBuilder
 protocol RecipeService {
     func fetchCategories() async throws -> [CategoryModel]
     func fetchMeals(in category: CategoryModel) async throws -> [MealSummaryModel]
+    func fetchMeal(withId id: Int) async throws -> MealDetailModel
 }
 
 /// Handle network interactions with TheMealDB
@@ -110,5 +111,112 @@ extension MealDBService {
         let responseBody = try decoder.decode(FetchMealsResponse.self, from: data)
         
         return responseBody.meals.compactMap { $0.asMeal }
+    }
+}
+
+extension MealDBService {
+    struct FetchMealDetailsResponse: Response {
+        struct MealItem: Codable, Equatable {
+            struct IngredientItem: Codable, Equatable {
+                var ingredient: String
+                var measurement: String
+                
+                var asIngredientModel: MealDetailModel.Ingredient {
+                    .init(title: ingredient, measurement: measurement)
+                }
+            }
+
+            enum CodingKeys: String, CodingKey {
+                case id = "idMeal"
+                case title = "strMeal"
+                case instructions = "strInstructions"
+                case thumbnailURL = "strMealThumb"
+                case youtubeURL = "strYoutube"
+                case sourceURL = "strSource"
+            }
+            
+            var id: Int
+            var title: String
+            var instructions: String
+            var thumbnailURL: URL
+            var youtubeURL: URL?
+            var sourceURL: URL?
+            var ingredients = [IngredientItem]()
+            
+            init(from decoder: any Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                guard let id = Int(try container.decode(String.self, forKey: .id)) else {
+                    var codingPath = decoder.codingPath
+                    codingPath.append(CodingKeys.id)
+                    throw DecodingError.valueNotFound(
+                        String.self,
+                        DecodingError.Context(codingPath: codingPath, debugDescription: "required `idMeal` is missing.")
+                    )
+                }
+                
+                self.id = id
+                self.title = try container.decode(String.self, forKey: .title)
+                self.instructions = try container.decode(String.self, forKey: .instructions)
+                self.thumbnailURL = try container.decode(URL.self, forKey: .thumbnailURL)
+                self.youtubeURL = try? container.decode(URL.self, forKey: .youtubeURL)
+                self.sourceURL = try? container.decode(URL.self, forKey: .sourceURL)
+
+                let ingredientsContainer = try decoder.singleValueContainer()
+                let dictionary = try ingredientsContainer.decode([String: String?].self)
+                let ingredientPrefix = "strIngredient"
+                for (key, value) in dictionary where key.hasPrefix(ingredientPrefix) && (value?.count ?? 0) > 0 {
+                    let suffix = key.dropFirst(ingredientPrefix.count)
+                    guard
+                        let unwrappedValue = value.safelyUnwrapped,
+                        let measurement = dictionary["strMeasure" + suffix]?.safelyUnwrapped
+                    else { continue }
+                    ingredients.append(.init(ingredient: unwrappedValue, measurement: measurement))
+                }
+            }
+                        
+        }
+        
+        @Lossy
+        var meals: [MealItem]
+    }
+    
+    func fetchMeal(withId id: Int) async throws -> MealDetailModel {
+        let request = URLRequest(EmptyBody.self) {
+            HTTPMethod(.get)
+            URL(string: "https://www.themealdb.com/api/json/v1/1/lookup.php")!
+            QueryItem("i", value: id)
+        }
+        
+        let (data, _) = try await urlSession.data(for: request)
+        let responseBody = try decoder.decode(FetchMealDetailsResponse.self, from: data)
+        
+        guard let mealDetails = responseBody.meals.first.map({
+            MealDetailModel(
+                id: $0.id,
+                title: $0.title,
+                instructions: $0.instructions,
+                imageURL: $0.thumbnailURL,
+                youtube: $0.youtubeURL,
+                ingredients: $0.ingredients.map { $0.asIngredientModel },
+                source: $0.sourceURL
+            )
+        }) else {
+            throw ServiceError.malformedResponse(request)
+        }
+        
+        return mealDetails
+    }
+}
+
+// MARK: - Optional<String> + helpers
+
+private extension Optional where Wrapped == String {
+    var safelyUnwrapped: String? {
+        switch self {
+        case .none:
+            return nil
+        case .some(let str):
+            return str
+        }
     }
 }

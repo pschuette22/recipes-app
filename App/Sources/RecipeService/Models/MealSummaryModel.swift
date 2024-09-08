@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MealSummaryModel: Codable, Hashable {
+struct MealSummaryModel: Hashable {
     var id: Int
     var title: String
     var image: URL

@@ -12,10 +12,12 @@ import UIKit
 final class MealCell: UICollectionViewCell, ConfigurableCell {
     static let reuseIdentifier = "\(Bundle.main.bundleIdentifier ?? "").MealCell"
     
-    @ExplicitlyConstrained
+    @ExplicitConstraints
     private var imageView = UIImageView(frame: .zero)
-    @ExplicitlyConstrained
+
+    @ExplicitConstraints
     private var titleLabel = UILabel(frame: .zero)
+
     private var imageTask: Task<Void, Error>?
     
     override init(frame: CGRect) {
