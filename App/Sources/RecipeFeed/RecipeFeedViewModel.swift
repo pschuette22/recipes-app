@@ -28,14 +28,21 @@ final class RecipeFeedViewModel: ViewModeling {
         openStateStream
     }
     
+    // Category Management
     private var categories: [CategoryModel] = []
-    private var selectedCategoryId: Int?
+    private var selectedCategoryIndex: Int
+    
+    // Meal Management
+    private var fetchMealsTask: Task<Void, Error>?
+    private var meals: [MealSummaryModel] = []
     
     required init(
         _ initialState: State = .init(),
+        selectedCategoryIndex: Int = 0,
         recipeService: any RecipeService = MealDBService()
     ) {
         state = initialState
+        self.selectedCategoryIndex = selectedCategoryIndex
         self.recipeService = recipeService
     }
 }
@@ -75,14 +82,49 @@ extension RecipeFeedViewModel {
 
         let configurations = categories.map {
             CategoryCell.Configuration(
-                url: $0.image,
+                image: $0.image,
                 title: $0.title,
-                isSelected: $0.id == selectedCategoryId
+                isSelected: $0.id == categories[safe: selectedCategoryIndex]?.id
             )
         }
 
-        self.state.update {
+        state.update {
             $0.setDidLoadCategories(withConfigurations: configurations)
+        }
+        
+        fetchMeals()
+    }
+}
+
+// MARK: - Meal Interactions 
+
+extension RecipeFeedViewModel {
+    ///  Fetches meals for the selected category
+    func fetchMeals() {
+        guard let category = categories[safe: selectedCategoryIndex] else { return }
+
+        state.setIsLoadingMeals()
+        fetchMealsTask?.cancel()
+        
+        fetchMealsTask = Task { [weak self, recipeService] in
+            do {
+                let meals = try await recipeService.fetchMeals(in: category)
+                await self?.update(meals: meals)
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    @MainActor
+    private func update(meals: [MealSummaryModel]) {
+        self.meals = meals
+        let configurations = meals.map {
+            MealCell.Configuration(image: $0.image, title: $0.title)
+        }
+        
+        state.update {
+            $0.setDidLoadMeals(withConfigurations: configurations)
         }
     }
 }

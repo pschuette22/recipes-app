@@ -19,35 +19,40 @@ struct RecipeFeedState: CollectionViewState {
 
     enum Sections: Hashable, Sendable, CaseIterable {
         case categories
+        case meals
     }
     
     enum Items: Hashable, Sendable {
         case contentLoading(ContentLoadingCell.Configuration)
         case category(CategoryCell.Configuration)
+        case meal(MealCell.Configuration)
     }
     
     /// Ordered array of Sections for current state
     private(set) var sections: [Sections] = Sections.allCases
     
     /// Map of items per section
-    private(set) var sectionItems: [Sections: [Items]] = [
-        .categories: [.contentLoading(.init(isAnimating: false))]
-    ]
-    
+    private(set) var sectionItems: [Sections: [Items]] = [:]
+
+    // Loading
     private(set) var isLoadingCategories: Bool = false
+    private(set) var isLoadingMeals: Bool = false
 }
+
+// MARK: - Computed Properties
 
 extension RecipeFeedState {
     /// Compute the snapshot based on collection state
     var snapshot: NSDiffableDataSourceSnapshot<Sections, Items> {
         var snapshot = NSDiffableDataSourceSnapshot<Sections, Items>()
-        snapshot.appendSections(sections)
-        sectionItems.forEach { section, items in
-            guard let items = sectionItems[section] else { return }
 
+        for section in sections {
+            guard let items = sectionItems[section] else { continue }
+
+            snapshot.appendSections([section])
             snapshot.appendItems(items, toSection: section)
         }
-        // Add additional customizations as needed
+
         return snapshot
     }
     
@@ -60,6 +65,8 @@ extension RecipeFeedState {
     }
 }
 
+// MARK: - Transactions
+
 extension RecipeFeedState {
     mutating func setIsLoadingCategories() {
         isLoadingCategories = true
@@ -69,5 +76,15 @@ extension RecipeFeedState {
     mutating func setDidLoadCategories(withConfigurations cellConfigurations: [CategoryCell.Configuration]) {
         isLoadingCategories = false
         sectionItems[.categories] = cellConfigurations.map { .category($0) }
+    }
+    
+    mutating func setIsLoadingMeals() {
+        isLoadingMeals = true
+        sectionItems[.meals] = [.contentLoading(.init(isAnimating: true))]
+    }
+    
+    mutating func setDidLoadMeals(withConfigurations cellConfigurations: [MealCell.Configuration]) {
+        isLoadingMeals = false
+        sectionItems[.meals] = cellConfigurations.map { .meal($0) }
     }
 }

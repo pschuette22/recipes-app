@@ -11,6 +11,7 @@ import SwiftRequestBuilder
 /// @mockable
 protocol RecipeService {
     func fetchCategories() async throws -> [CategoryModel]
+    func fetchMeals(in category: CategoryModel) async throws -> [MealSummaryModel]
 }
 
 /// Handle network interactions with TheMealDB
@@ -29,9 +30,9 @@ final class MealDBService: RecipeService {
 // MARK: - MealDBService categories
 
 extension MealDBService {
-    // Respons Model
+    // Response Model
     struct FetchCategoriestResponse: Response {
-        struct CategoryRequestItem: Codable, Equatable {
+        struct CategoryItem: Codable, Equatable {
             enum CodingKeys: String, CodingKey {
                 case id = "idCategory"
                 case title = "strCategory"
@@ -51,7 +52,8 @@ extension MealDBService {
             }
         }
 
-        let categories: [CategoryRequestItem]
+        @Lossy
+        var categories: [CategoryItem]
     }
 
     
@@ -67,5 +69,46 @@ extension MealDBService {
         let responseBody = try decoder.decode(FetchCategoriestResponse.self, from: data)
         
         return responseBody.categories.compactMap { $0.asCategory }
+    }
+}
+
+// MARK: - MealDBService Meals
+
+extension MealDBService {
+    // Response Model
+    struct FetchMealsResponse: Response {
+        struct MealItem: Codable, Equatable {
+            enum CodingKeys: String, CodingKey {
+                case id = "idMeal"
+                case title = "strMeal"
+                case thumbnailUrl = "strMealThumb"
+            }
+
+            let id: String
+            let title: String
+            let thumbnailUrl: URL
+            
+            var asMeal: MealSummaryModel? {
+                guard let id = Int(self.id) else { return nil }
+                
+                return MealSummaryModel(id: id, title: title, image: thumbnailUrl)
+            }
+        }
+
+        @Lossy
+        var meals: [MealItem]
+    }
+
+    func fetchMeals(in category: CategoryModel) async throws -> [MealSummaryModel] {
+        let request = URLRequest(EmptyBody.self) {
+            HTTPMethod(.get)
+            URL(string: "https://www.themealdb.com/api/json/v1/1/filter.php")!
+            QueryItem("c", value: category.title)
+        }
+        
+        let (data, _) = try await urlSession.data(for: request)
+        let responseBody = try decoder.decode(FetchMealsResponse.self, from: data)
+        
+        return responseBody.meals.compactMap { $0.asMeal }
     }
 }

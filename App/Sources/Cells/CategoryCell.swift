@@ -12,9 +12,12 @@ import UIKit
 final class CategoryCell: UICollectionViewCell, ConfigurableCell {
     static let reuseIdentifier = "\(Bundle.main.bundleIdentifier ?? "").CategoryCell"
     
-    private lazy var imageView = UIImageView(frame: .zero)
-    private lazy var titleContainer = UIView(frame: .zero)
-    private lazy var titleLabel = UILabel(frame: .zero)
+    @ExplicitlyConstrained
+    private var imageView = UIImageView(frame: .zero)
+    @ExplicitlyConstrained
+    private var titleContainer = UIView(frame: .zero)
+    @ExplicitlyConstrained
+    private var titleLabel = UILabel(frame: .zero)
     private var imageTask: Task<Void, Never>?
     
     
@@ -46,7 +49,7 @@ final class CategoryCell: UICollectionViewCell, ConfigurableCell {
 
 extension CategoryCell {
     struct Configuration: ViewConfiguration {
-        let url: URL
+        let image: URL
         let title: String
         let isSelected: Bool
     }
@@ -92,7 +95,7 @@ extension CategoryCell {
         titleLabel.text = configuration.title
         imageTask = Task { [weak self] in
             let imageRequest = URLRequest(
-                url: configuration.url,
+                url: configuration.image,
                 cachePolicy: .returnCacheDataElseLoad
             )
 
@@ -104,6 +107,9 @@ extension CategoryCell {
             self?.setImage(image)
         }
         
-        // TODO: Category selection
+        if configuration.isSelected {
+            contentView.layer.borderColor = UIColor.systemGroupedBackground.cgColor
+            contentView.layer.borderWidth = 8
+        }
     }
 }
