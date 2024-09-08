@@ -121,7 +121,6 @@ extension RecipeFeedViewController {
                         )]
                     )
                     let section = NSCollectionLayoutSection(group: group)
-                    section.orthogonalScrollingBehavior = .continuous
                     return section
                 }
             },
@@ -152,5 +151,10 @@ extension RecipeFeedViewController {
 // MARK: - UICollectionViewDelegate
 
 extension RecipeFeedViewController: UICollectionViewDelegate {
-    // TODO: handle delegate functions
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if viewModel.state.sections[safe: indexPath.section] == .categories {
+            viewModel.didSelectCategory(at: indexPath.row)
+        }
+    }
 }

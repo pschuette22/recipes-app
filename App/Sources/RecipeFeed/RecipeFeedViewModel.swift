@@ -63,6 +63,20 @@ extension RecipeFeedViewModel {
 // MARK: - Category Interactions
 
 extension RecipeFeedViewModel {
+    private func updateCategoryCellModels() {
+        let configurations = categories.map {
+            CategoryCell.Configuration(
+                image: $0.image,
+                title: $0.title,
+                isSelected: $0.id == categories[safe: selectedCategoryIndex]?.id
+            )
+        }
+
+        state.update {
+            $0.setDidLoadCategories(withConfigurations: configurations)
+        }
+    }
+
     private func fetchCategories() {
         state.setIsLoadingCategories()
         Task { [weak self, recipeService] in
@@ -79,19 +93,18 @@ extension RecipeFeedViewModel {
     @MainActor
     private func update(categories: [CategoryModel]) {
         self.categories = categories
+        updateCategoryCellModels()
+        fetchMeals()
+    }
+    
+    func didSelectCategory(at index: Int) {
+        guard
+            index != selectedCategoryIndex,
+            categories.indices.contains(index)
+        else { return }
 
-        let configurations = categories.map {
-            CategoryCell.Configuration(
-                image: $0.image,
-                title: $0.title,
-                isSelected: $0.id == categories[safe: selectedCategoryIndex]?.id
-            )
-        }
-
-        state.update {
-            $0.setDidLoadCategories(withConfigurations: configurations)
-        }
-        
+        selectedCategoryIndex = index
+        updateCategoryCellModels()
         fetchMeals()
     }
 }
