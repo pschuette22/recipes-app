@@ -140,4 +140,8 @@ extension RecipeFeedViewModel {
             $0.setDidLoadMeals(withConfigurations: configurations)
         }
     }
+    
+    func viewModel(forMealAt index: Int) -> MealDetailsViewModel? {
+        meals[safe: index].map { MealDetailsViewModel(summary: $0) }
+    }
 }

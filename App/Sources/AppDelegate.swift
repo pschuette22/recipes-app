@@ -19,7 +19,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             let viewModel = RecipeFeedViewModel()
             let feedViewController = RecipeFeedViewController(viewModel: viewModel)
-            window.rootViewController = UINavigationController(rootViewController: feedViewController)
+            let navigationController = UINavigationController(rootViewController: feedViewController)
+            navigationController.edgesForExtendedLayout = .all
+            navigationController.extendedLayoutIncludesOpaqueBars = true
+            navigationController.navigationBar.isTranslucent = true
+            window.rootViewController = navigationController
         }
         window.makeKeyAndVisible()
         self.window = window
