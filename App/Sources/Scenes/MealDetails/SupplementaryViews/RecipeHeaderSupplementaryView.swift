@@ -14,7 +14,7 @@ final class RecipeHeaderSupplementaryView: UICollectionReusableView, Configurabl
     
     @ExplicitConstraints
     private var imageView = UIImageView(frame: .zero)
-    
+
     @ExplicitConstraints
     private var titleLabel = UILabel(frame: .zero)
     
@@ -44,8 +44,12 @@ extension RecipeHeaderSupplementaryView {
     }
 
     func setupSubviews() {
+        backgroundColor = .systemBackground
+        clipsToBounds = true
         addSubview(imageView)
+        imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
+
         addSubview(titleLabel)
         titleLabel.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         titleLabel.lineBreakMode = .byWordWrapping
@@ -69,7 +73,7 @@ extension RecipeHeaderSupplementaryView {
     func apply(_ configuration: Configuration) {
         // Apply the layout configuration
         titleLabel.text = configuration.title
-        
+        imageView.alpha = 0.7
         imageTask = Task { [weak self] in
             let request = URLRequest(url: configuration.imageURL, cachePolicy: .returnCacheDataElseLoad)
             guard 
@@ -84,5 +88,11 @@ extension RecipeHeaderSupplementaryView {
     @MainActor
     func set(image: UIImage) {
         self.imageView.image = image
+    }
+    
+    @MainActor
+    func set(titleTransitionPercentage: CGFloat) {
+        let alphaPercentage = min(max(0, titleTransitionPercentage), 1)
+        imageView.alpha = 0.5 + ((1 - alphaPercentage) * 0.4)
     }
 }

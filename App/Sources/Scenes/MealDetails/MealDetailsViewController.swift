@@ -20,7 +20,7 @@ final class MealDetailsViewController: UIViewController {
     
     private lazy var collectionViewLayout: UICollectionViewLayout = makeLayout()
     private lazy var dataSource: DataSource = makeDataSource(for: collectionView)
-    
+
     required init(viewModel: ViewModel) {
         self.viewModel = viewModel
 
@@ -61,6 +61,7 @@ extension MealDetailsViewController {
 
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
+
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
@@ -74,8 +75,16 @@ extension MealDetailsViewController {
 
     @MainActor
     func render(_ state: State) {
-        // TODO: Apply any new state changes
         dataSource.apply(state.snapshot, animatingDifferences: true)
+    }
+    
+    private func frame(_ header: RecipeHeaderSupplementaryView) {
+        let maxY = navigationController?.navigationBar.frame.maxY ?? 20 // Shouldn't ever fallback
+        let height = max(250 - collectionView.contentOffset.y, maxY)
+        
+        header.frame.origin.y = collectionView.contentOffset.y
+        header.frame.size.height = height
+        header.set(titleTransitionPercentage: min(1 - (height / 350), 1))
     }
 }
 
@@ -93,10 +102,11 @@ extension MealDetailsViewController {
         let configuration = UICollectionViewCompositionalLayoutConfiguration()
         
         let headerItem = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(250)),
+            layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(150)),
             elementKind: Self.pageHeaderKind,
             alignment: .top
         )
+        headerItem.pinToVisibleBounds = true
 
         configuration.boundarySupplementaryItems = [
             headerItem
@@ -132,6 +142,7 @@ extension MealDetailsViewController {
                     ofKind: Self.pageHeaderKind,
                     for: indexPath
                 )
+                self?.frame(header)
                 return header
             default:
                 return nil
@@ -145,5 +156,12 @@ extension MealDetailsViewController {
 // MARK: - UICollectionViewDelegate
 
 extension MealDetailsViewController: UICollectionViewDelegate {
-    // TODO: handle delegate functions
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if let header = collectionView.supplementaryView(
+                forElementKind: Self.pageHeaderKind,
+                at: IndexPath(index: 0)
+        ) as? RecipeHeaderSupplementaryView {
+            frame(header)
+        }
+    }
 }
