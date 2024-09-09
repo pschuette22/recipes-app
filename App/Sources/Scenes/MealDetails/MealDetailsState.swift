@@ -10,8 +10,6 @@ import Foundation
 import UIKit
 
 struct MealDetailsState: CollectionViewState {
-    // TODO: State variables
-    // var someVariable: Int
     enum Sections: Hashable, Sendable {
         case ingredients
         case instructions
