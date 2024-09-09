@@ -20,7 +20,7 @@ final class CategoryCell: UICollectionViewCell, ConfigurableCell {
 
     @ExplicitConstraints
     private var titleLabel = UILabel(frame: .zero)
-
+    
     private var imageTask: Task<Void, Never>?
     
     
