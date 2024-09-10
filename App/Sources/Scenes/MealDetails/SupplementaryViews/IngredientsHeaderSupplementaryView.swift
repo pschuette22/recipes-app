@@ -36,7 +36,7 @@ extension IngredientsHeaderSupplementaryView {
         addSubview(ingredientLabel)
         ingredientLabel.numberOfLines = 0
         ingredientLabel.lineBreakMode = .byWordWrapping
-        ingredientLabel.font = UIFont.preferredFont(forTextStyle: .title3)
+        ingredientLabel.font = UIFont.preferredFont(forTextStyle: .title2)
         ingredientLabel.textColor = UIColor.label
         ingredientLabel.textAlignment = .center
         ingredientLabel.text = "Ingredient"
@@ -44,7 +44,7 @@ extension IngredientsHeaderSupplementaryView {
         addSubview(measurementLabel)
         measurementLabel.numberOfLines = 0
         measurementLabel.lineBreakMode = .byWordWrapping
-        measurementLabel.font = UIFont.preferredFont(forTextStyle: .title3)
+        measurementLabel.font = UIFont.preferredFont(forTextStyle: .title2)
         measurementLabel.textColor = UIColor.label
         measurementLabel.textAlignment = .center
         measurementLabel.text = "Amount"
@@ -54,7 +54,7 @@ extension IngredientsHeaderSupplementaryView {
             measurementLabel.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 8),
             measurementLabel.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -8),
             measurementLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            measurementLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.25),
+            measurementLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.35),
             measurementLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -8),
 
             // Ingredient Label

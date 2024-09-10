@@ -169,7 +169,7 @@ extension MealDetailsViewController {
                         subitems: Array(repeating: NSCollectionLayoutItem(layoutSize: itemSize), count: ingredientCount)
                     )
         
-                    let estimatedHeaderHeight = UIFont.preferredFont(forTextStyle: .title3).lineHeight + 16
+                    let estimatedHeaderHeight = UIFont.preferredFont(forTextStyle: .title2).lineHeight + 16
                     let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
                         layoutSize: .init(
                             widthDimension: .fractionalWidth(1),

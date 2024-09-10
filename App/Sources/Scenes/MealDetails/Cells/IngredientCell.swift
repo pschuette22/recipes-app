@@ -48,14 +48,14 @@ extension IngredientCell {
         measurementLabel.lineBreakMode = .byWordWrapping
         measurementLabel.font = UIFont.preferredFont(forTextStyle: .body)
         measurementLabel.textColor = UIColor.secondaryLabel
-        measurementLabel.textAlignment = .natural
+        measurementLabel.textAlignment = .center
 
         NSLayoutConstraint.activate([
             // Measurement Label
             measurementLabel.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 8),
             measurementLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
             measurementLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            measurementLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.25),
+            measurementLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.35),
             measurementLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
             // Ingredient Label
             ingredientLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),

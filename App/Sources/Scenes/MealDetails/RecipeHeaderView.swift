@@ -69,7 +69,7 @@ extension RecipeHeaderView {
 
     func apply(_ configuration: Configuration) {
         titleLabel.text = configuration.title
-        imageView.alpha = 0.7
+        set(titleTransitionPercentage: 1)
         imageTask = Task { [weak self] in
             let request = URLRequest(url: configuration.imageURL, cachePolicy: .returnCacheDataElseLoad)
             guard 
