@@ -57,6 +57,7 @@ extension MealDetailsViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         reframeHeader()
+        navigationItem.leftBarButtonItem?.tintColor = UIColor.darkText
     }
 }
 
@@ -70,8 +71,13 @@ extension MealDetailsViewController {
         let navigationAppearance = UINavigationBarAppearance()
         navigationAppearance.configureWithTransparentBackground()
         let barButtonAppearance = UIBarButtonItemAppearance(style: .plain)
+        barButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.darkText]
+        let image = UIImage(systemName: "chevron.backward")?.withTintColor(.darkText, renderingMode: .alwaysOriginal)
+        navigationAppearance.setBackIndicatorImage(image, transitionMaskImage: image)
+        navigationAppearance.backButtonAppearance = barButtonAppearance
         navigationItem.standardAppearance = navigationAppearance
         navigationItem.scrollEdgeAppearance = navigationAppearance
+        
 
         collectionView.register(HeaderAnchorSupplementaryView.self, ofKind: Self.pageHeaderKind)
         collectionView.register(IngredientsHeaderSupplementaryView.self, ofKind: Self.ingredientsHeaderKind)
