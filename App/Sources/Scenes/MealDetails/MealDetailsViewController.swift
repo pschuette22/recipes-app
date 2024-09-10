@@ -74,8 +74,8 @@ extension MealDetailsViewController {
 
         collectionView.register(HeaderAnchorSupplementaryView.self, ofKind: Self.pageHeaderKind)
         collectionView.register(IngredientsHeaderSupplementaryView.self, ofKind: Self.ingredientsHeaderKind)
-
         collectionView.register(IngredientCell.self)
+        collectionView.register(InstructionsCell.self)
 
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = UIColor.systemBackground
@@ -193,6 +193,20 @@ extension MealDetailsViewController {
                     ]
 
                     return section
+                    
+                case .instructions:
+                    let estimatedHeight = UIFont.preferredFont(forTextStyle: .body).lineHeight
+                    let itemSize = NSCollectionLayoutSize(
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .estimated(estimatedHeight)
+                    )
+                    let instructionGroup = NSCollectionLayoutGroup.vertical(
+                        layoutSize: itemSize,
+                        subitems: [.init(layoutSize: itemSize)]
+                    )
+                    let section = NSCollectionLayoutSection(group: instructionGroup)
+                    section.contentInsets = .init(top: 0, leading: 24, bottom: 24, trailing: 24)
+                    return section
                 }
             },
             configuration: configuration
@@ -212,6 +226,8 @@ extension MealDetailsViewController {
             switch item {
             case .ingredient(let configuration):
                 return collectionView.dequeueCell(IngredientCell.self, withConfiguration: configuration, for: indexPath)
+            case .instructions(let configuration):
+                return collectionView.dequeueCell(InstructionsCell.self, withConfiguration: configuration, for: indexPath)
             }
         }
         

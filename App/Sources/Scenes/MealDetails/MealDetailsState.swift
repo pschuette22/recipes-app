@@ -12,10 +12,12 @@ import UIKit
 struct MealDetailsState: CollectionViewState {
     enum Sections: Hashable, Sendable {
         case ingredients
+        case instructions
     }
 
     enum Items: Hashable, Sendable {
         case ingredient(IngredientCell.Configuration)
+        case instructions(InstructionsCell.Configuration)
     }
     
     let photoURL: URL
@@ -63,5 +65,13 @@ extension MealDetailsState {
             sections.insert(.ingredients, at: 0)
         }
         sectionItems[.ingredients] = ingredients.map { .ingredient($0) }
+    }
+    
+    mutating
+    func set(instructions: String) {
+        if !sections.contains(.instructions) {
+            sections.append(.instructions)
+        }
+        sectionItems[.instructions] = [.instructions(.init(instructions: instructions))]
     }
 }

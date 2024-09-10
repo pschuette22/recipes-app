@@ -99,6 +99,7 @@ extension MealDetailsViewModel {
 
         state.update {
             $0.set(ingredients: ingredients)
+            $0.set(instructions: details.instructions)
         }
     }
 }
