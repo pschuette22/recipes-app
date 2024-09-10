@@ -17,7 +17,6 @@ protocol RecipeService {
 
 /// Handle network interactions with TheMealDB
 final class MealDBService: RecipeService {
-
     private let urlSession: URLSessionProtocol
     private let decoder = JSONDecoder()
 
@@ -47,7 +46,7 @@ extension MealDBService {
             let description: String
 
             var asCategory: CategoryModel? {
-                guard let id = Int(self.id) else { return nil }
+                guard let id = Int(id) else { return nil }
 
                 return CategoryModel(id: id, title: title, image: thumbnailUrl, description: description)
             }
@@ -68,7 +67,7 @@ extension MealDBService {
         let (data, _) = try await urlSession.data(for: request)
         let responseBody = try decoder.decode(FetchCategoriestResponse.self, from: data)
 
-        return responseBody.categories.compactMap { $0.asCategory }
+        return responseBody.categories.compactMap(\.asCategory)
     }
 }
 
@@ -89,7 +88,7 @@ extension MealDBService {
             let thumbnailUrl: URL
 
             var asMeal: MealSummaryModel? {
-                guard let id = Int(self.id) else { return nil }
+                guard let id = Int(id) else { return nil }
 
                 return MealSummaryModel(id: id, title: title, image: thumbnailUrl)
             }
@@ -109,7 +108,7 @@ extension MealDBService {
         let (data, _) = try await urlSession.data(for: request)
         let responseBody = try decoder.decode(FetchMealsResponse.self, from: data)
 
-        return responseBody.meals.compactMap { $0.asMeal }
+        return responseBody.meals.compactMap(\.asMeal)
     }
 }
 
@@ -144,7 +143,7 @@ extension MealDBService {
 
             init(from decoder: any Decoder) throws {
                 let container = try decoder.container(keyedBy: CodingKeys.self)
-                guard let id = Int(try container.decode(String.self, forKey: .id)) else {
+                guard let id = try Int(container.decode(String.self, forKey: .id)) else {
                     var codingPath = decoder.codingPath
                     codingPath.append(CodingKeys.id)
                     throw DecodingError.valueNotFound(
@@ -154,11 +153,11 @@ extension MealDBService {
                 }
 
                 self.id = id
-                self.title = try container.decode(String.self, forKey: .title)
-                self.instructions = try container.decode(String.self, forKey: .instructions)
-                self.thumbnailURL = try container.decode(URL.self, forKey: .thumbnailURL)
-                self.youtubeURL = try? container.decode(URL.self, forKey: .youtubeURL)
-                self.sourceURL = try? container.decode(URL.self, forKey: .sourceURL)
+                title = try container.decode(String.self, forKey: .title)
+                instructions = try container.decode(String.self, forKey: .instructions)
+                thumbnailURL = try container.decode(URL.self, forKey: .thumbnailURL)
+                youtubeURL = try? container.decode(URL.self, forKey: .youtubeURL)
+                sourceURL = try? container.decode(URL.self, forKey: .sourceURL)
 
                 let ingredientsContainer = try decoder.singleValueContainer()
                 let dictionary = try ingredientsContainer.decode([String: String?].self)
@@ -172,7 +171,6 @@ extension MealDBService {
                     ingredients.append(.init(ingredient: unwrappedValue, measurement: measurement))
                 }
             }
-
         }
 
         @Lossy
@@ -196,7 +194,7 @@ extension MealDBService {
                 instructions: $0.instructions,
                 imageURL: $0.thumbnailURL,
                 youtube: $0.youtubeURL,
-                ingredients: $0.ingredients.map { $0.asIngredientModel },
+                ingredients: $0.ingredients.map(\.asIngredientModel),
                 source: $0.sourceURL
             )
         }) else {
@@ -209,13 +207,13 @@ extension MealDBService {
 
 // MARK: - Optional<String> + helpers
 
-private extension Optional where Wrapped == String {
+private extension String? {
     var safelyUnwrapped: String? {
         switch self {
         case .none:
-            return nil
-        case .some(let str):
-            return str
+            nil
+        case let .some(str):
+            str
         }
     }
 }

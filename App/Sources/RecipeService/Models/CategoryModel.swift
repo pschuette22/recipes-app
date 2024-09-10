@@ -1,5 +1,5 @@
 //
-//  Category.swift
+//  CategoryModel.swift
 //  Recipes
 //
 //  Created by Peter Schuette on 9/3/24.

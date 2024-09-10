@@ -1,4 +1,4 @@
-// 
+//
 //  InstructionsHeaderSupplementaryView.swift
 //  Recipes
 //
@@ -21,14 +21,15 @@ final class InstructionsHeaderSupplementaryView: UICollectionReusableView, Confi
     }
 
     @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 // MARK: - Subview
+
 extension InstructionsHeaderSupplementaryView {
-    struct Configuration: ViewConfiguration { }
+    struct Configuration: ViewConfiguration {}
 
     func setupSubviews() {
         addSubview(headerLabel)
@@ -43,11 +44,11 @@ extension InstructionsHeaderSupplementaryView {
             headerLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
             headerLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 8),
             headerLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -8),
-            headerLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
+            headerLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
         ])
     }
 
-    func apply(_ configuration: Configuration) {
+    func apply(_: Configuration) {
         // Apply the layout configuration
     }
 }

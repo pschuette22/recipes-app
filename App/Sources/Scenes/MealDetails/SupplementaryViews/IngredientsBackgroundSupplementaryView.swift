@@ -1,4 +1,4 @@
-// 
+//
 //  IngredientsBackgroundSupplementaryView.swift
 //  Recipes
 //
@@ -15,18 +15,19 @@ final class IngredientsBackgroundSupplementaryView: UICollectionReusableView, Co
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupSubviews()
-       // initialize what is needed
+        // initialize what is needed
     }
 
     @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 // MARK: - Subview
+
 extension IngredientsBackgroundSupplementaryView {
-    struct Configuration: ViewConfiguration { }
+    struct Configuration: ViewConfiguration {}
 
     func setupSubviews() {
         backgroundColor = UIColor.systemGroupedBackground
@@ -38,7 +39,7 @@ extension IngredientsBackgroundSupplementaryView {
         layer.shadowOpacity = 0.3
     }
 
-    func apply(_ configuration: Configuration) {
+    func apply(_: Configuration) {
         // Apply the layout configuration
     }
 }

@@ -109,7 +109,7 @@ extension RecipeFeedViewModel {
     }
 }
 
-// MARK: - Meal Interactions 
+// MARK: - Meal Interactions
 
 extension RecipeFeedViewModel {
     ///  Fetches meals for the selected category

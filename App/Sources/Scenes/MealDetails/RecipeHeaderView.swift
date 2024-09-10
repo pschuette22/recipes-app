@@ -1,5 +1,5 @@
-// 
-//  RecipeHeaderSupplementaryView.swift
+//
+//  RecipeHeaderView.swift
 //  Recipes
 //
 //  Created by Peter Schuette on 9/9/24.
@@ -17,7 +17,7 @@ final class RecipeHeaderView: UIView {
     private var titleLabel = UILabel(frame: .zero)
 
     var titleFrame: CGRect {
-        return titleLabel.frame
+        titleLabel.frame
     }
 
     private var titleTransitionAnimator: UIViewPropertyAnimator?
@@ -31,16 +31,17 @@ final class RecipeHeaderView: UIView {
     }
 
     @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+    override func hitTest(_: CGPoint, with _: UIEvent?) -> UIView? {
         nil
     }
 }
 
 // MARK: - Subview
+
 extension RecipeHeaderView {
     struct Configuration: ViewConfiguration {
         var imageURL: URL
@@ -70,7 +71,7 @@ extension RecipeHeaderView {
             titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             titleLabel.leftAnchor.constraint(greaterThanOrEqualTo: leftAnchor, constant: 24),
-            titleLabel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -24)
+            titleLabel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -24),
         ])
     }
 
@@ -90,7 +91,7 @@ extension RecipeHeaderView {
 
     @MainActor
     func set(image: UIImage) {
-        self.imageView.image = image
+        imageView.image = image
     }
 
     @MainActor

@@ -1,5 +1,5 @@
-// 
-//  CategoryCellCell.swift
+//
+//  CategoryCell.swift
 //  Recipes
 //
 //  Created by Peter Schuette on 9/3/24.
@@ -29,7 +29,7 @@ final class CategoryCell: UICollectionViewCell, ConfigurableCell {
     }
 
     @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -44,7 +44,7 @@ final class CategoryCell: UICollectionViewCell, ConfigurableCell {
 
     @MainActor
     private func setImage(_ image: UIImage) {
-        self.imageView.image = image
+        imageView.image = image
     }
 }
 
@@ -91,7 +91,7 @@ extension CategoryCell {
             titleLabel.topAnchor.constraint(equalTo: titleContainer.topAnchor, constant: 8),
             titleLabel.bottomAnchor.constraint(equalTo: titleContainer.bottomAnchor, constant: -8),
             titleLabel.leftAnchor.constraint(equalTo: titleContainer.leftAnchor, constant: 8),
-            titleLabel.rightAnchor.constraint(lessThanOrEqualTo: titleContainer.rightAnchor, constant: -8)
+            titleLabel.rightAnchor.constraint(lessThanOrEqualTo: titleContainer.rightAnchor, constant: -8),
         ])
     }
 

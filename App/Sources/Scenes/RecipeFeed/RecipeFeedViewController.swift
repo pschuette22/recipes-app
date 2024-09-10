@@ -1,4 +1,4 @@
-// 
+//
 //  RecipeFeedViewController.swift
 //  Recipes
 //
@@ -68,7 +68,7 @@ extension RecipeFeedViewController {
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
             collectionView.rightAnchor.constraint(equalTo: view.rightAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
 
         collectionView.dataSource = dataSource
@@ -143,11 +143,11 @@ extension RecipeFeedViewController {
             guard let item = self?.viewModel.state.item(at: indexPath) else { return nil }
 
             switch item {
-            case .contentLoading(let configuration):
+            case let .contentLoading(configuration):
                 return collectionView.dequeueCell(ContentLoadingCell.self, withConfiguration: configuration, for: indexPath)
-            case .category(let configuration):
+            case let .category(configuration):
                 return collectionView.dequeueCell(CategoryCell.self, withConfiguration: configuration, for: indexPath)
-            case .meal(let configuration):
+            case let .meal(configuration):
                 return collectionView.dequeueCell(MealCell.self, withConfiguration: configuration, for: indexPath)
             }
         }

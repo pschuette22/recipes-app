@@ -10,6 +10,10 @@ MOCKS_OUTPUT_DIR=App/Mocks
 mocks:
 	$(MOCKOLO) -s $(APP_SRC_DIR) -d $(MOCKS_OUTPUT_DIR)/Mocks.generated.swift --header "@testable import Recipes"
 
+#
+# Swiftlint
+#
+
 install-swiftlint:
 	file_version=$$(cat .swiftlint-version); \
 	eval("brew install swiftlint@$$file_version")
@@ -32,3 +36,28 @@ swiftlint: check-swiftlint-version
 
 swiftlint-fix: check-swiftlint-version
 	swiftlint --config .swiftlint.yml --fix
+
+#
+# Swiftformat
+#
+
+install-swiftformat:
+	file_version=$$(cat .swiftformat-version); \
+	eval("brew install swiftformat@$$file_version")
+
+check-swiftformat-version:
+	@swiftformat_version=$$(swiftformat --version); \
+	file_version=$$(cat .swiftformat-version); \
+	if [ "$$swiftformat_version" = "$$file_version" ]; then \
+		echo "Using swiftformat $$file_version"; \
+	else \
+		echo "SwiftFormat version does not match, expected $$file_version"; \
+		echo "\nrun 'make install-swiftformat'"; \
+		echo "       - or -"; \
+		echo "    'brew install swiftformat@$$file_version'\n"; \
+		exit 1; \
+	fi
+
+lint: swiftlint check-swiftformat-version
+	swiftformat . --config .swiftformat.yml
+	

@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import XCTest
 @testable import Recipes
+import XCTest
 
 final class RecipeFeedViewModelTests: XCTestCase {
     private var service: RecipeServiceMock!
@@ -22,12 +22,10 @@ final class RecipeFeedViewModelTests: XCTestCase {
     }
 
     func testViewDidLoad_fetchesCategories() async throws {
-
         let receivedLoadingState = XCTestExpectation(description: "view model entered loading state")
         let receivedLoadedState = XCTestExpectation(description: "view model entered loaded state")
         service.fetchCategoriesHandler = {
-
-            return [CategoryModel(id: 123, title: "Some Category", image: URL(string: "https://some.img")!, description: "some description")]
+            [CategoryModel(id: 123, title: "Some Category", image: URL(string: "https://some.img")!, description: "some description")]
         }
 
         let stateObserver = Task {

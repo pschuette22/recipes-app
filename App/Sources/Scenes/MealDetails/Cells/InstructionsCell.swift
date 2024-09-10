@@ -1,4 +1,4 @@
-// 
+//
 //  InstructionsCell.swift
 //  Recipes
 //
@@ -21,12 +21,13 @@ final class InstructionsCell: UICollectionViewCell, ConfigurableCell {
     }
 
     @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 // MARK: - Subview
+
 extension InstructionsCell {
     struct Configuration: ViewConfiguration {
         var instructions: String
@@ -43,7 +44,7 @@ extension InstructionsCell {
             textView.topAnchor.constraint(equalTo: contentView.topAnchor),
             textView.leftAnchor.constraint(equalTo: contentView.leftAnchor),
             textView.rightAnchor.constraint(equalTo: contentView.rightAnchor),
-            textView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            textView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ])
     }
 

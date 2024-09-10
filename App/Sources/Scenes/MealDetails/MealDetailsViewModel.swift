@@ -1,4 +1,4 @@
-// 
+//
 //  MealDetailsViewModel.swift
 //  Recipes
 //
@@ -52,7 +52,7 @@ final class MealDetailsViewModel: ViewModeling {
         service: any RecipeService = MealDBService()
     ) {
         self.recipeId = recipeId
-        self.state = initialState
+        state = initialState
         self.service = service
     }
 
@@ -76,8 +76,8 @@ extension MealDetailsViewModel {
     }
 
     private func fetchRecipeDetails() {
-        let recipeId = self.recipeId
-        let service = self.service
+        let recipeId = recipeId
+        let service = service
 
         loadTask = Task { [weak self] in
             guard

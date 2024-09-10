@@ -1,4 +1,4 @@
-// 
+//
 //  MealDetailsViewController.swift
 //  Recipes
 //
@@ -101,7 +101,7 @@ extension MealDetailsViewController {
             headerView.topAnchor.constraint(equalTo: collectionView.topAnchor),
             headerView.leftAnchor.constraint(equalTo: collectionView.leftAnchor),
             headerView.widthAnchor.constraint(equalTo: collectionView.widthAnchor),
-            headerHeightConstraint
+            headerHeightConstraint,
         ])
 
         collectionView.dataSource = dataSource
@@ -125,7 +125,7 @@ extension MealDetailsViewController {
             self?.headerHeightConstraint.constant = height
         }
 
-        headerView.set(titleTransitionPercentage: min(((height - maxY) / maxY), 1))
+        headerView.set(titleTransitionPercentage: min((height - maxY) / maxY, 1))
     }
 
     private func updateTitleDisplay() {
@@ -155,7 +155,7 @@ extension MealDetailsViewController {
         )
 
         configuration.boundarySupplementaryItems = [
-            headerItem
+            headerItem,
         ]
 
         configuration.interSectionSpacing = 16
@@ -202,10 +202,10 @@ extension MealDetailsViewController {
                     let backgroundItem = NSCollectionLayoutDecorationItem.background(elementKind: Self.ingredientBackgroundKind)
                     backgroundItem.contentInsets = .init(top: 3, leading: 16, bottom: 16, trailing: 16)
                     section.boundarySupplementaryItems = [
-                        sectionHeader
+                        sectionHeader,
                     ]
                     section.decorationItems = [
-                        backgroundItem
+                        backgroundItem,
                     ]
 
                     return section
@@ -232,7 +232,7 @@ extension MealDetailsViewController {
                     )
 
                     section.boundarySupplementaryItems = [
-                        sectionHeader
+                        sectionHeader,
                     ]
 
                     section.contentInsets = .init(top: 0, leading: 24, bottom: 24, trailing: 24)
@@ -254,9 +254,9 @@ extension MealDetailsViewController {
             guard let item = self?.viewModel.state.item(at: indexPath) else { return nil }
 
             switch item {
-            case .ingredient(let configuration):
+            case let .ingredient(configuration):
                 return collectionView.dequeueCell(IngredientCell.self, withConfiguration: configuration, for: indexPath)
-            case .instructions(let configuration):
+            case let .instructions(configuration):
                 return collectionView.dequeueCell(InstructionsCell.self, withConfiguration: configuration, for: indexPath)
             }
         }
@@ -264,28 +264,28 @@ extension MealDetailsViewController {
         dataSource.supplementaryViewProvider = { collection, element, indexPath in
             switch element {
             case Self.pageHeaderKind:
-                return collection.dequeueSupplementaryView(
+                collection.dequeueSupplementaryView(
                     HeaderAnchorSupplementaryView.self,
                     withConfiguration: .init(),
                     ofKind: Self.pageHeaderKind,
                     for: indexPath
                 )
             case Self.ingredientsHeaderKind:
-                return collection.dequeueSupplementaryView(
+                collection.dequeueSupplementaryView(
                     IngredientsHeaderSupplementaryView.self,
                     withConfiguration: .init(),
                     ofKind: element,
                     for: indexPath
                 )
             case Self.instructionsHeaderKind:
-                return collectionView.dequeueSupplementaryView(
+                collectionView.dequeueSupplementaryView(
                     InstructionsHeaderSupplementaryView.self,
                     withConfiguration: .init(),
                     ofKind: element,
                     for: indexPath
                 )
             default:
-                return nil
+                nil
             }
         }
 
@@ -296,7 +296,7 @@ extension MealDetailsViewController {
 // MARK: - UICollectionViewDelegate
 
 extension MealDetailsViewController: UICollectionViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    func scrollViewDidScroll(_: UIScrollView) {
         reframeHeader()
 
         if

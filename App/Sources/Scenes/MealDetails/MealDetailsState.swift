@@ -1,4 +1,4 @@
-// 
+//
 //  MealDetailsState.swift
 //  Recipes
 //
@@ -40,7 +40,7 @@ extension MealDetailsState {
     var snapshot: NSDiffableDataSourceSnapshot<Sections, Items> {
         var snapshot = NSDiffableDataSourceSnapshot<Sections, Items>()
         snapshot.appendSections(sections)
-        sectionItems.forEach { section, items in
+        sectionItems.forEach { section, _ in
             guard let items = sectionItems[section] else { return }
 
             snapshot.appendItems(items, toSection: section)

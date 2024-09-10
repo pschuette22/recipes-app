@@ -1,4 +1,4 @@
-// 
+//
 //  HeaderAnchorSupplementaryView.swift
 //  Recipes
 //
@@ -18,18 +18,19 @@ final class HeaderAnchorSupplementaryView: UICollectionReusableView, Configurabl
     }
 
     @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 // MARK: - Subview
+
 extension HeaderAnchorSupplementaryView {
-    struct Configuration: ViewConfiguration { }
+    struct Configuration: ViewConfiguration {}
 
     func setupSubviews() {
         backgroundColor = .systemBackground
     }
 
-    func apply(_ configuration: Configuration) { }
+    func apply(_: Configuration) {}
 }
