@@ -36,6 +36,11 @@ extension IngredientsBackgroundSupplementaryView {
     func setupSubviews() {
         backgroundColor = UIColor.systemGroupedBackground
         layer.cornerRadius = 16.0
+        layer.shadowColor = traitCollection.preferredShadowColor.cgColor
+        layer.shadowRadius = 3
+        layer.masksToBounds = false
+        layer.shadowOffset = .zero
+        layer.shadowOpacity = 0.3
     }
 
     func apply(_ configuration: Configuration) {

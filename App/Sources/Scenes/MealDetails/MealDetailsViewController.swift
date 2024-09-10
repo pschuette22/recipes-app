@@ -14,6 +14,7 @@ final class MealDetailsViewController: UIViewController {
     private static let pageHeaderKind = "page-header"
     private static let ingredientsHeaderKind = "ingredients-header"
     private static let ingredientBackgroundKind = "ingredients-background"
+    private static let instructionsHeaderKind = "instructions-header"
 
     private lazy var collectionView = UICollectionView(
         frame: .zero,
@@ -68,17 +69,19 @@ extension MealDetailsViewController {
         titleView.backgroundColor = .clear
         let navigationAppearance = UINavigationBarAppearance()
         navigationAppearance.configureWithTransparentBackground()
-
+        let barButtonAppearance = UIBarButtonItemAppearance(style: .plain)
         navigationItem.standardAppearance = navigationAppearance
         navigationItem.scrollEdgeAppearance = navigationAppearance
 
         collectionView.register(HeaderAnchorSupplementaryView.self, ofKind: Self.pageHeaderKind)
         collectionView.register(IngredientsHeaderSupplementaryView.self, ofKind: Self.ingredientsHeaderKind)
+        collectionView.register(InstructionsHeaderSupplementaryView.self, ofKind: Self.instructionsHeaderKind)
         collectionView.register(IngredientCell.self)
         collectionView.register(InstructionsCell.self)
 
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = UIColor.systemBackground
+        collectionView.showsVerticalScrollIndicator = false
 
         view.addSubview(collectionView)
         view.addSubview(headerView)
@@ -205,6 +208,20 @@ extension MealDetailsViewController {
                         subitems: [.init(layoutSize: itemSize)]
                     )
                     let section = NSCollectionLayoutSection(group: instructionGroup)
+                    
+                    let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
+                        layoutSize: .init(
+                            widthDimension: .fractionalWidth(1),
+                            heightDimension: .estimated(UIFont.preferredFont(forTextStyle: .title2).lineHeight + 24)
+                        ),
+                        elementKind: Self.instructionsHeaderKind,
+                        alignment: .top
+                    )
+                    
+                    section.boundarySupplementaryItems = [
+                        sectionHeader
+                    ]
+                    
                     section.contentInsets = .init(top: 0, leading: 24, bottom: 24, trailing: 24)
                     return section
                 }
@@ -241,14 +258,19 @@ extension MealDetailsViewController {
                     for: indexPath
                 )
             case Self.ingredientsHeaderKind:
-                let header = collection.dequeueSupplementaryView(
+                return collection.dequeueSupplementaryView(
                     IngredientsHeaderSupplementaryView.self,
                     withConfiguration: .init(),
                     ofKind: element,
                     for: indexPath
                 )
-//                header.backgroundColor = UIColor.systemGroupedBackground
-                return header
+            case Self.instructionsHeaderKind:
+                return collectionView.dequeueSupplementaryView(
+                    InstructionsHeaderSupplementaryView.self,
+                    withConfiguration: .init(),
+                    ofKind: element,
+                    for: indexPath
+                )
             default:
                 return nil
             }
