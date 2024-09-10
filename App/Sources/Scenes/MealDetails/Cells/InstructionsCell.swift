@@ -11,23 +11,18 @@ import UIKit
 
 final class InstructionsCell: UICollectionViewCell, ConfigurableCell {
     static let reuseIdentifier = "\(Bundle.main.bundleIdentifier ?? "").InstructionsCell"
-    
+
     @ExplicitConstraints
     private var textView = UITextView(frame: .zero)
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupSubviews()
     }
 
-    @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")    
+    @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        // reset the cell
     }
 }
 
@@ -48,7 +43,7 @@ extension InstructionsCell {
             textView.topAnchor.constraint(equalTo: contentView.topAnchor),
             textView.leftAnchor.constraint(equalTo: contentView.leftAnchor),
             textView.rightAnchor.constraint(equalTo: contentView.rightAnchor),
-            textView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            textView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
 

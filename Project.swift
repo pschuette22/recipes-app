@@ -12,8 +12,8 @@ let project = Project(
                 with: [
                     "UILaunchScreen": [
                         "UIColorName": "",
-                        "UIImageName": "",
-                    ],
+                        "UIImageName": ""
+                    ]
                 ]
             ),
             sources: ["App/Sources/**"],
@@ -32,8 +32,8 @@ let project = Project(
             sources: ["App/UnitTests/**", "App/Mocks/**.swift"],
             resources: ["App/TestFixtures/**"],
             dependencies: [
-                .target(name: "Recipes"),
+                .target(name: "Recipes")
             ]
-        ),
+        )
     ]
 )

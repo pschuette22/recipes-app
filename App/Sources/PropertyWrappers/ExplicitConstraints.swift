@@ -10,7 +10,7 @@ import UIKit
 
 @propertyWrapper struct ExplicitConstraints<SomeView: UIView> {
     var wrappedValue: SomeView
-    
+
     init(wrappedValue: SomeView) {
         self.wrappedValue = wrappedValue
         wrappedValue.translatesAutoresizingMaskIntoConstraints = false

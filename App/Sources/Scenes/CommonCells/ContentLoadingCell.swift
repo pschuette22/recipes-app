@@ -11,16 +11,16 @@ import UIKit
 
 final class ContentLoadingCell: UICollectionViewCell, ConfigurableCell {
     static let reuseIdentifier = "\(Bundle.main.bundleIdentifier ?? "").ContentLoadingCell"
-    
+
     @ExplicitConstraints
     private var activityIndicator = UIActivityIndicatorView(style: .large)
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupSubviews()
     }
 
-    @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")    
+    @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -42,7 +42,7 @@ extension ContentLoadingCell {
         contentView.addSubview(activityIndicator)
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
     }
 

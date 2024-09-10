@@ -12,7 +12,7 @@ import XCTest
 final class RecipeFeedViewModelTests: XCTestCase {
     private var service: RecipeServiceMock!
     private var viewModel: RecipeFeedViewModel!
-    
+
     override func setUp() {
         service = .init()
         viewModel = RecipeFeedViewModel(
@@ -20,16 +20,16 @@ final class RecipeFeedViewModelTests: XCTestCase {
             recipeService: service
         )
     }
-    
+
     func testViewDidLoad_fetchesCategories() async throws {
-        
+
         let receivedLoadingState = XCTestExpectation(description: "view model entered loading state")
         let receivedLoadedState = XCTestExpectation(description: "view model entered loaded state")
         service.fetchCategoriesHandler = {
-            
+
             return [CategoryModel(id: 123, title: "Some Category", image: URL(string: "https://some.img")!, description: "some description")]
         }
-        
+
         let stateObserver = Task {
             var stateStream = viewModel.stateStream.observe().makeAsyncIterator()
             while let state = await stateStream.next() {
@@ -41,7 +41,7 @@ final class RecipeFeedViewModelTests: XCTestCase {
                 }
             }
         }
-        
+
         viewModel.viewDidLoad()
         // Assert we hit begin loading
         await fulfillment(of: [receivedLoadingState], timeout: 0.1)

@@ -25,13 +25,13 @@ final class MealDetailsViewModel: ViewModeling {
     var stateStream: any AsyncBroadcast<State> {
         openStateStream
     }
-    
+
     private let recipeId: Int
     private let service: any RecipeService
     private var loadTask: Task<Void, Error>?
-    
+
     private var details: MealDetailModel?
-    
+
     convenience init(
         summary: MealSummaryModel,
         service: any RecipeService = MealDBService()
@@ -45,7 +45,7 @@ final class MealDetailsViewModel: ViewModeling {
             service: service
         )
     }
-    
+
     required init(
         recipeId: Int,
         _ initialState: State,
@@ -55,7 +55,7 @@ final class MealDetailsViewModel: ViewModeling {
         self.state = initialState
         self.service = service
     }
-    
+
     deinit {
         loadTask?.cancel()
     }
@@ -74,7 +74,7 @@ extension MealDetailsViewModel {
     func viewDidLoad() {
         fetchRecipeDetails()
     }
-    
+
     private func fetchRecipeDetails() {
         let recipeId = self.recipeId
         let service = self.service
@@ -89,7 +89,7 @@ extension MealDetailsViewModel {
             await self?.didLoad(details)
         }
     }
-    
+
     @MainActor
     func didLoad(_ details: MealDetailModel) {
         self.details = details

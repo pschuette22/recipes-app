@@ -11,22 +11,18 @@ import UIKit
 
 final class InstructionsHeaderSupplementaryView: UICollectionReusableView, ConfigurableSupplementaryView {
     static let reuseIdentifier = "\(Bundle.main.bundleIdentifier ?? "").InstructionsHeaderSupplementaryView"
-    
+
     @ExplicitConstraints
     private var headerLabel = UILabel(frame: .zero)
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupSubviews()
     }
 
-    @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")    
+    @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
     }
 }
 
@@ -47,7 +43,7 @@ extension InstructionsHeaderSupplementaryView {
             headerLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
             headerLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 8),
             headerLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -8),
-            headerLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
+            headerLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
         ])
     }
 
