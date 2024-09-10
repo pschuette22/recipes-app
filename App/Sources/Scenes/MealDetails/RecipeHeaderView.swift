@@ -101,16 +101,17 @@ extension RecipeHeaderView {
     
     @MainActor
     func set(titleIsHidden: Bool) {
-        guard 
+        guard
             titleIsHidden != titleLabel.isHidden,
             titleIsHidden != isAnimatingHide
         else { return }
         
         isAnimatingHide = titleIsHidden
         titleTransitionAnimator?.stopAnimation(true)
-        titleTransitionAnimator = UIViewPropertyAnimator(duration: 0.1, curve: .easeInOut)
+        titleTransitionAnimator = UIViewPropertyAnimator(duration: 0.0001, curve: .easeInOut)
         titleTransitionAnimator?.addAnimations { [titleLabel] in
             titleLabel.alpha = titleIsHidden ? 0 : 1
+            titleLabel.isHidden = false
         }
         titleTransitionAnimator?.addCompletion { [weak self] position in
             guard position == .end else { return /* ignore cancelation */ }

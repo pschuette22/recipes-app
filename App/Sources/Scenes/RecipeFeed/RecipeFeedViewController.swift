@@ -49,6 +49,14 @@ extension RecipeFeedViewController {
 extension RecipeFeedViewController {
     ///  Prepare subviews for state rendering
     private func setupSubviews() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.label]
+        appearance.backgroundColor = .systemBackground
+        navigationItem.title = "Recipes"
+        navigationItem.standardAppearance = appearance
+        navigationItem.compactAppearance = appearance
+        navigationItem.scrollEdgeAppearance = appearance
         navigationItem.backButtonTitle = ""
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(ContentLoadingCell.self)
@@ -58,8 +66,8 @@ extension RecipeFeedViewController {
         view.addSubview(collectionView)
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            collectionView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
-            collectionView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
+            collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            collectionView.rightAnchor.constraint(equalTo: view.rightAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
         

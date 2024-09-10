@@ -93,9 +93,10 @@ extension MealDetailsViewController {
         view.addSubview(headerView)
 
         NSLayoutConstraint.activate([
+            // Collection view
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
-            collectionView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
+            collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            collectionView.rightAnchor.constraint(equalTo: view.rightAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             // HeaderView
             headerView.topAnchor.constraint(equalTo: collectionView.topAnchor),
