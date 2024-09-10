@@ -25,10 +25,7 @@ final class HeaderAnchorSupplementaryView: UICollectionReusableView, Configurabl
 
 // MARK: - Subview
 extension HeaderAnchorSupplementaryView {
-    // TODO: Define transactions
-    struct Configuration: ViewConfiguration {
-        
-    }
+    struct Configuration: ViewConfiguration { }
 
     func setupSubviews() {
         backgroundColor = .systemBackground
