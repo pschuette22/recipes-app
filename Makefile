@@ -41,7 +41,7 @@ swiftlint-fix: check-swiftlint-version
 # Swiftformat
 #
 
-install-swiftlint:
+install-swiftformat:
 	file_version=$$(cat .swiftformat-version); \
 	eval("brew install swiftformat@$$file_version")
 
@@ -58,5 +58,6 @@ check-swiftformat-version:
 		exit 1; \
 	fi
 
-swiftformat: check-swiftformat-version
+lint: swiftlint check-swiftformat-version
+	swiftformat . --config .swiftformat.yml
 	
