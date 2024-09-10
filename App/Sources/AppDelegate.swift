@@ -1,7 +1,6 @@
 import Foundation
 import UIKit
 
-
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
@@ -11,7 +10,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         prepareApplicationWindow(isTesting: isTesting)
         return true
     }
-    
+
     private func prepareApplicationWindow(isTesting: Bool) {
         let window = UIWindow(frame: UIScreen.main.bounds)
         if isTesting {

@@ -1,0 +1,5 @@
+excluded:
+  - Tuist
+  - Derived
+  - App/Mocks
+

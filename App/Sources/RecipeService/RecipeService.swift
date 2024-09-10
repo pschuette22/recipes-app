@@ -17,10 +17,10 @@ protocol RecipeService {
 
 /// Handle network interactions with TheMealDB
 final class MealDBService: RecipeService {
-    
+
     private let urlSession: URLSessionProtocol
     private let decoder = JSONDecoder()
-    
+
     init(
         urlSession: URLSessionProtocol = URLSession.shared
     ) {
@@ -45,10 +45,10 @@ extension MealDBService {
             let title: String
             let thumbnailUrl: URL
             let description: String
-            
+
             var asCategory: CategoryModel? {
                 guard let id = Int(self.id) else { return nil }
-                
+
                 return CategoryModel(id: id, title: title, image: thumbnailUrl, description: description)
             }
         }
@@ -57,7 +57,6 @@ extension MealDBService {
         var categories: [CategoryItem]
     }
 
-    
     /// Fetches a list of categories from the backend.
     /// - Returns: An array of category data models
     func fetchCategories() async throws -> [CategoryModel] {
@@ -65,10 +64,10 @@ extension MealDBService {
             HTTPMethod(.get)
             URL(string: "https://www.themealdb.com/api/json/v1/1/categories.php")!
         }
-        
+
         let (data, _) = try await urlSession.data(for: request)
         let responseBody = try decoder.decode(FetchCategoriestResponse.self, from: data)
-        
+
         return responseBody.categories.compactMap { $0.asCategory }
     }
 }
@@ -88,10 +87,10 @@ extension MealDBService {
             let id: String
             let title: String
             let thumbnailUrl: URL
-            
+
             var asMeal: MealSummaryModel? {
                 guard let id = Int(self.id) else { return nil }
-                
+
                 return MealSummaryModel(id: id, title: title, image: thumbnailUrl)
             }
         }
@@ -106,10 +105,10 @@ extension MealDBService {
             URL(string: "https://www.themealdb.com/api/json/v1/1/filter.php")!
             QueryItem("c", value: category.title)
         }
-        
+
         let (data, _) = try await urlSession.data(for: request)
         let responseBody = try decoder.decode(FetchMealsResponse.self, from: data)
-        
+
         return responseBody.meals.compactMap { $0.asMeal }
     }
 }
@@ -120,7 +119,7 @@ extension MealDBService {
             struct IngredientItem: Codable, Equatable {
                 var ingredient: String
                 var measurement: String
-                
+
                 var asIngredientModel: MealDetailModel.Ingredient {
                     .init(title: ingredient, measurement: measurement)
                 }
@@ -134,7 +133,7 @@ extension MealDBService {
                 case youtubeURL = "strYoutube"
                 case sourceURL = "strSource"
             }
-            
+
             var id: Int
             var title: String
             var instructions: String
@@ -142,7 +141,7 @@ extension MealDBService {
             var youtubeURL: URL?
             var sourceURL: URL?
             var ingredients = [IngredientItem]()
-            
+
             init(from decoder: any Decoder) throws {
                 let container = try decoder.container(keyedBy: CodingKeys.self)
                 guard let id = Int(try container.decode(String.self, forKey: .id)) else {
@@ -153,7 +152,7 @@ extension MealDBService {
                         DecodingError.Context(codingPath: codingPath, debugDescription: "required `idMeal` is missing.")
                     )
                 }
-                
+
                 self.id = id
                 self.title = try container.decode(String.self, forKey: .title)
                 self.instructions = try container.decode(String.self, forKey: .instructions)
@@ -173,23 +172,23 @@ extension MealDBService {
                     ingredients.append(.init(ingredient: unwrappedValue, measurement: measurement))
                 }
             }
-                        
+
         }
-        
+
         @Lossy
         var meals: [MealItem]
     }
-    
+
     func fetchMeal(withId id: Int) async throws -> MealDetailModel {
         let request = URLRequest(EmptyBody.self) {
             HTTPMethod(.get)
             URL(string: "https://www.themealdb.com/api/json/v1/1/lookup.php")!
             QueryItem("i", value: id)
         }
-        
+
         let (data, _) = try await urlSession.data(for: request)
         let responseBody = try decoder.decode(FetchMealDetailsResponse.self, from: data)
-        
+
         guard let mealDetails = responseBody.meals.first.map({
             MealDetailModel(
                 id: $0.id,
@@ -203,7 +202,7 @@ extension MealDBService {
         }) else {
             throw ServiceError.malformedResponse(request)
         }
-        
+
         return mealDetails
     }
 }

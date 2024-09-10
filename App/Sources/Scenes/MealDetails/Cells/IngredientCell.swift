@@ -11,18 +11,18 @@ import UIKit
 
 final class IngredientCell: UICollectionViewCell, ConfigurableCell {
     static let reuseIdentifier = "\(Bundle.main.bundleIdentifier ?? "").IngredientCell"
-    
+
     @ExplicitConstraints
     private var ingredientLabel = UILabel(frame: .zero)
     @ExplicitConstraints
     private var measurementLabel = UILabel(frame: .zero)
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupSubviews()
     }
 
-    @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")    
+    @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -61,7 +61,7 @@ extension IngredientCell {
             ingredientLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             ingredientLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
             ingredientLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-            ingredientLabel.rightAnchor.constraint(equalTo: measurementLabel.leftAnchor, constant: -16),
+            ingredientLabel.rightAnchor.constraint(equalTo: measurementLabel.leftAnchor, constant: -16)
         ])
     }
 

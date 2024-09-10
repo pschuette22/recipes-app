@@ -11,7 +11,7 @@ import UIKit
 
 final class MealCell: UICollectionViewCell, ConfigurableCell {
     static let reuseIdentifier = "\(Bundle.main.bundleIdentifier ?? "").MealCell"
-    
+
     @ExplicitConstraints
     private var imageView = UIImageView(frame: .zero)
 
@@ -19,13 +19,13 @@ final class MealCell: UICollectionViewCell, ConfigurableCell {
     private var titleLabel = UILabel(frame: .zero)
 
     private var imageTask: Task<Void, Error>?
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupSubviews()
     }
 
-    @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")    
+    @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -37,7 +37,7 @@ final class MealCell: UICollectionViewCell, ConfigurableCell {
         imageView.image = nil
         titleLabel.text = nil
     }
-    
+
     @MainActor
     func setImage(_ image: UIImage) {
         imageView.image = image
@@ -59,7 +59,7 @@ extension MealCell {
         titleLabel.numberOfLines = 0
         titleLabel.font = UIFont.preferredFont(forTextStyle: .title3)
         titleLabel.textColor = UIColor.label
-        
+
         NSLayoutConstraint.activate([
             // Image constraints
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),

@@ -11,7 +11,7 @@ import UIKit
 
 final class CategoryCell: UICollectionViewCell, ConfigurableCell {
     static let reuseIdentifier = "\(Bundle.main.bundleIdentifier ?? "").CategoryCell"
-    
+
     @ExplicitConstraints
     private var imageView = UIImageView(frame: .zero)
 
@@ -20,16 +20,15 @@ final class CategoryCell: UICollectionViewCell, ConfigurableCell {
 
     @ExplicitConstraints
     private var titleLabel = UILabel(frame: .zero)
-    
+
     private var imageTask: Task<Void, Never>?
-    
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupSubviews()
     }
 
-    @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")    
+    @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -42,7 +41,7 @@ final class CategoryCell: UICollectionViewCell, ConfigurableCell {
         titleLabel.text = nil
         set(isSelected: false)
     }
-    
+
     @MainActor
     private func setImage(_ image: UIImage) {
         self.imageView.image = image
@@ -65,7 +64,7 @@ extension CategoryCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.image = RecipesAsset.Assets.categoryPlaceholder.image
-        
+
         contentView.addSubview(titleContainer)
         titleContainer.translatesAutoresizingMaskIntoConstraints = false
         titleContainer.backgroundColor = UIColor.tertiarySystemBackground.withAlphaComponent(0.8)
@@ -77,7 +76,7 @@ extension CategoryCell {
         titleLabel.numberOfLines = 0
         titleLabel.lineBreakMode = .byWordWrapping
         titleLabel.textAlignment = .center
-        
+
         NSLayoutConstraint.activate([
             // Pin image to content
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -104,17 +103,17 @@ extension CategoryCell {
                 cachePolicy: .returnCacheDataElseLoad
             )
 
-            guard 
+            guard
                 let imageData = try? await URLSession.shared.data(for: imageRequest).0,
                 let image = UIImage(data: imageData)
             else { return }
 
             self?.setImage(image)
         }
-        
+
         set(isSelected: configuration.isSelected)
     }
-    
+
     private func set(isSelected: Bool) {
         contentView.layer.borderWidth = isSelected ? 8 : 0
     }

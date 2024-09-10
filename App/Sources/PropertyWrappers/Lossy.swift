@@ -8,8 +8,8 @@
 import Foundation
 
 @propertyWrapper struct Lossy<Element: Decodable>: Decodable {
-    var wrappedValue: Array<Element>
-    
+    var wrappedValue: [Element]
+
     init(from decoder: any Decoder) throws {
         var container = try decoder.unkeyedContainer()
         var decodableElements = [Element]()

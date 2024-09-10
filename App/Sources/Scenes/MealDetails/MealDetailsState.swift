@@ -19,16 +19,16 @@ struct MealDetailsState: CollectionViewState {
         case ingredient(IngredientCell.Configuration)
         case instructions(InstructionsCell.Configuration)
     }
-    
+
     let photoURL: URL
     let title: String
-    
+
     /// Ordered array of Sections for current state
     private(set) var sections: [Sections] = []
 
     /// Map of items per section
     private(set) var sectionItems: [Sections: [Items]] = [:]
-        
+
     init(photoURL: URL, title: String) {
         self.photoURL = photoURL
         self.title = title
@@ -48,11 +48,11 @@ extension MealDetailsState {
         // Add additional customizations as needed
         return snapshot
     }
-    
+
     func section(at index: Int) -> Sections {
         sections[index]
     }
-    
+
     func item(at indexPath: IndexPath) -> Items? {
         sectionItems[section(at: indexPath.section)]?[indexPath.row]
     }
@@ -66,7 +66,7 @@ extension MealDetailsState {
         }
         sectionItems[.ingredients] = ingredients.map { .ingredient($0) }
     }
-    
+
     mutating
     func set(instructions: String) {
         if !sections.contains(.instructions) {

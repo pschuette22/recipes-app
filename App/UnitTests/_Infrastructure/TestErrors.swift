@@ -9,7 +9,7 @@ import Foundation
 
 enum TestError: Error, CustomStringConvertible {
     case failedToLoadResource(name: String)
-    
+
     var description: String {
         switch self {
         case .failedToLoadResource(let name):

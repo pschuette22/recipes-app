@@ -17,14 +17,14 @@ final class MealDBServiceTests: XCTestCase {
         sessionMock = .init()
         service = MealDBService(urlSession: sessionMock)
     }
-    
+
     override func tearDown() {
         sessionMock = nil
         service = nil
     }
-    
+
     // MARK: - Categories fetch
-    
+
     func testFetchCategories_withSuccess_retrievesCategories() async throws {
         let data = try Fixture.data(forResource: "GetCategories-success", withExtension: "json")
         sessionMock.dataHandler = { request in
@@ -35,9 +35,9 @@ final class MealDBServiceTests: XCTestCase {
         XCTAssertEqual(categories.count, 3)
         XCTAssertEqual(categories[1].title, "Chicken")
     }
-    
+
     // MARK: - Meal Fetch
-    
+
     func testFetchMeals_withSuccess_retrievesMeals() async throws {
         let data = try Fixture.data(forResource: "GetMeals-success", withExtension: "json")
         let seafood = CategoryModel(id: 123, title: "Seafood", image: URL(string: "https://some.img")!, description: "")
@@ -50,7 +50,7 @@ final class MealDBServiceTests: XCTestCase {
         XCTAssertEqual(meals[1].id, 52819)
         XCTAssertEqual(meals[1].title, "Cajun spiced fish tacos")
     }
-    
+
     func testFetchMealById_withSuccess_retrievesMealDetails() async throws {
         let data = try Fixture.data(forResource: "GetMeal-success", withExtension: "json")
 
@@ -63,5 +63,3 @@ final class MealDBServiceTests: XCTestCase {
         XCTAssertEqual(meal.ingredients.count, 7)
     }
 }
-
-
