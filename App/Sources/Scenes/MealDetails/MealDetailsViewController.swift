@@ -12,12 +12,20 @@ import UIKit
 @Modeled(MealDetailsState.self, MealDetailsViewModel.self)
 final class MealDetailsViewController: UIViewController {
     private static let pageHeaderKind = "page-header"
+    private static let ingredientsHeaderKind = "ingredients-header"
+    private static let ingredientBackgroundKind = "ingredients-background"
 
     private lazy var collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: collectionViewLayout
     )
     
+    @ExplicitConstraints
+    private var headerView = RecipeHeaderView(frame: .zero)
+    private lazy var headerHeightConstraint = headerView.heightAnchor.constraint(
+        equalToConstant: (navigationController?.navigationBar.frame.maxY ?? 0) + 150 - 16
+    )
+
     private lazy var collectionViewLayout: UICollectionViewLayout = makeLayout()
     private lazy var dataSource: DataSource = makeDataSource(for: collectionView)
 
@@ -41,6 +49,13 @@ extension MealDetailsViewController {
 
         setupSubviews()
         startObservingState(renderImmediately: true)
+        
+        viewModel.viewDidLoad()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        reframeHeader()
     }
 }
 
@@ -57,20 +72,33 @@ extension MealDetailsViewController {
         navigationItem.standardAppearance = navigationAppearance
         navigationItem.scrollEdgeAppearance = navigationAppearance
 
-        collectionView.register(RecipeHeaderSupplementaryView.self, ofKind: Self.pageHeaderKind)
+        collectionView.register(HeaderAnchorSupplementaryView.self, ofKind: Self.pageHeaderKind)
+        collectionView.register(IngredientsHeaderSupplementaryView.self, ofKind: Self.ingredientsHeaderKind)
+
+        collectionView.register(IngredientCell.self)
 
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = UIColor.systemBackground
+
         view.addSubview(collectionView)
+        view.addSubview(headerView)
 
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
             collectionView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            // HeaderView
+            headerView.topAnchor.constraint(equalTo: collectionView.topAnchor),
+            headerView.leftAnchor.constraint(equalTo: collectionView.leftAnchor),
+            headerView.widthAnchor.constraint(equalTo: collectionView.widthAnchor),
+            headerHeightConstraint,
         ])
         
         collectionView.dataSource = dataSource
         collectionView.delegate = self
+        
+        headerView.apply(.init(imageURL: viewModel.state.photoURL, title: viewModel.state.title))
     }
 
     @MainActor
@@ -78,13 +106,17 @@ extension MealDetailsViewController {
         dataSource.apply(state.snapshot, animatingDifferences: true)
     }
     
-    private func frame(_ header: RecipeHeaderSupplementaryView) {
+    private func reframeHeader() {
+        guard let anchorY = collectionView.supplementaryView(forElementKind: Self.pageHeaderKind, at: IndexPath(index: 0))?.frame.maxY else { return }
+
         let maxY = navigationController?.navigationBar.frame.maxY ?? 20 // Shouldn't ever fallback
-        let height = max(250 - collectionView.contentOffset.y, maxY)
-        
-        header.frame.origin.y = collectionView.contentOffset.y
-        header.frame.size.height = height
-        header.set(titleTransitionPercentage: min(1 - (height / 350), 1))
+        let height = max(anchorY - collectionView.contentOffset.y - 16, maxY)
+
+        UIView.animate(withDuration: .zero) { [weak self] in
+            self?.headerHeightConstraint.constant = height
+        }
+
+        headerView.set(titleTransitionPercentage: min(((height - maxY) / maxY), 1))
     }
 }
 
@@ -94,8 +126,7 @@ extension MealDetailsViewController {
     private typealias DataSource = UICollectionViewDiffableDataSource
     typealias Sections = State.Sections
     typealias Items = State.Items
-    
-    
+
     @MainActor
     private func makeLayout() -> UICollectionViewLayout {
         // https://developer.apple.com/documentation/uikit/uicollectionviewcompositionallayout
@@ -106,19 +137,68 @@ extension MealDetailsViewController {
             elementKind: Self.pageHeaderKind,
             alignment: .top
         )
-        headerItem.pinToVisibleBounds = true
-
+        
         configuration.boundarySupplementaryItems = [
             headerItem
         ]
+
+        configuration.interSectionSpacing = 16
         
         let layout = UICollectionViewCompositionalLayout(
             sectionProvider: { [weak self] sectionIndex, environment in
-                // TODO: return section configuration
-                return nil
-            }, 
+                guard
+                    let state = self?.viewModel.state
+                else {
+                    return .empty
+                }
+                
+                switch state.section(at: sectionIndex) {
+                case .ingredients:
+                    let ingredientCount = state.sectionItems[.ingredients]?.count ?? 0
+                    let estimatedItemHeight = UIFont.preferredFont(forTextStyle: .body).lineHeight + 16
+                    let itemSize = NSCollectionLayoutSize(
+                        widthDimension: .fractionalWidth(1),
+                        heightDimension: .estimated(estimatedItemHeight)
+                    )
+                    
+                    let ingredientsGroup = NSCollectionLayoutGroup.vertical(
+                        layoutSize: NSCollectionLayoutSize(
+                            widthDimension: .fractionalWidth(1),
+                            heightDimension: .estimated(estimatedItemHeight * CGFloat(ingredientCount))
+                        ),
+                        subitems: Array(repeating: NSCollectionLayoutItem(layoutSize: itemSize), count: ingredientCount)
+                    )
+        
+                    let estimatedHeaderHeight = UIFont.preferredFont(forTextStyle: .title2).lineHeight + 16
+                    let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
+                        layoutSize: .init(
+                            widthDimension: .fractionalWidth(1),
+                            heightDimension: .estimated(estimatedHeaderHeight)
+                        ),
+                        elementKind: Self.ingredientsHeaderKind,
+                        alignment: .top
+                    )
+                    sectionHeader.extendsBoundary = true
+                    
+                    let section = NSCollectionLayoutSection(group: ingredientsGroup)
+                    section.contentInsets = .init(top: 0, leading: 24, bottom: 24, trailing: 24)
+
+                    let backgroundItem = NSCollectionLayoutDecorationItem.background(elementKind: Self.ingredientBackgroundKind)
+                    backgroundItem.contentInsets = .init(top: 0, leading: 16, bottom: 16, trailing: 16)
+                    section.boundarySupplementaryItems = [
+                        sectionHeader
+                    ]
+                    section.decorationItems = [
+                        backgroundItem
+                    ]
+
+                    return section
+                }
+            },
             configuration: configuration
         )
+        
+        layout.register(IngredientsBackgroundSupplementaryView.self, forDecorationViewOfKind: Self.ingredientBackgroundKind)
 
         return layout
     }
@@ -126,23 +206,32 @@ extension MealDetailsViewController {
     private func makeDataSource(for collectionView: UICollectionView) -> DataSource<Sections, Items> {
         let dataSource = DataSource<Sections, Items>(
             collectionView: collectionView
-        ) { collectionView, indexPath, itemIdentifier in
-            // TODO: turn into configured cells
-            nil
+        ) { [weak self] collectionView, indexPath, itemIdentifier in
+            guard let item = self?.viewModel.state.item(at: indexPath) else { return nil }
+            
+            switch item {
+            case .ingredient(let configuration):
+                return collectionView.dequeueCell(IngredientCell.self, withConfiguration: configuration, for: indexPath)
+            }
         }
         
-        dataSource.supplementaryViewProvider = { [weak self] collection, element, indexPath in
-            guard let state = self?.viewModel.state else { return nil }
-
+        dataSource.supplementaryViewProvider = { collection, element, indexPath in
             switch element {
             case Self.pageHeaderKind:
-                let header = collection.dequeueSupplementaryView(
-                    RecipeHeaderSupplementaryView.self,
-                    withConfiguration: .init(imageURL: state.photoURL, title: state.title),
+                return collection.dequeueSupplementaryView(
+                    HeaderAnchorSupplementaryView.self,
+                    withConfiguration: .init(),
                     ofKind: Self.pageHeaderKind,
                     for: indexPath
                 )
-                self?.frame(header)
+            case Self.ingredientsHeaderKind:
+                let header = collection.dequeueSupplementaryView(
+                    IngredientsHeaderSupplementaryView.self,
+                    withConfiguration: .init(),
+                    ofKind: element,
+                    for: indexPath
+                )
+//                header.backgroundColor = UIColor.systemGroupedBackground
                 return header
             default:
                 return nil
@@ -157,11 +246,6 @@ extension MealDetailsViewController {
 
 extension MealDetailsViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if let header = collectionView.supplementaryView(
-                forElementKind: Self.pageHeaderKind,
-                at: IndexPath(index: 0)
-        ) as? RecipeHeaderSupplementaryView {
-            frame(header)
-        }
+        reframeHeader()
     }
 }

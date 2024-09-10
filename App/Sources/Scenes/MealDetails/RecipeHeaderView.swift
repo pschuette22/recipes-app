@@ -9,12 +9,10 @@ import AsyncState
 import Foundation
 import UIKit
 
-final class RecipeHeaderSupplementaryView: UICollectionReusableView, ConfigurableSupplementaryView {
-    static let reuseIdentifier = "\(Bundle.main.bundleIdentifier ?? "").RecipeHeaderSupplementaryView"
-    
+final class RecipeHeaderView: UIView {
     @ExplicitConstraints
     private var imageView = UIImageView(frame: .zero)
-
+    
     @ExplicitConstraints
     private var titleLabel = UILabel(frame: .zero)
     
@@ -24,20 +22,19 @@ final class RecipeHeaderSupplementaryView: UICollectionReusableView, Configurabl
         super.init(frame: frame)
         setupSubviews()
     }
-
-    @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")    
+    
+    @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        // reset the cell
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        nil
     }
 }
 
 // MARK: - Subview
-extension RecipeHeaderSupplementaryView {
+extension RecipeHeaderView {
     struct Configuration: ViewConfiguration {
         var imageURL: URL
         var title: String
@@ -71,9 +68,8 @@ extension RecipeHeaderSupplementaryView {
     }
 
     func apply(_ configuration: Configuration) {
-        // Apply the layout configuration
         titleLabel.text = configuration.title
-        imageView.alpha = 0.7
+        set(titleTransitionPercentage: 1)
         imageTask = Task { [weak self] in
             let request = URLRequest(url: configuration.imageURL, cachePolicy: .returnCacheDataElseLoad)
             guard 
@@ -93,6 +89,6 @@ extension RecipeHeaderSupplementaryView {
     @MainActor
     func set(titleTransitionPercentage: CGFloat) {
         let alphaPercentage = min(max(0, titleTransitionPercentage), 1)
-        imageView.alpha = 0.5 + ((1 - alphaPercentage) * 0.4)
+        imageView.alpha = 0.4 + (alphaPercentage * 0.3)
     }
 }
