@@ -51,14 +51,14 @@ extension IngredientsHeaderSupplementaryView {
 
         NSLayoutConstraint.activate([
             // Measurement Label
-            measurementLabel.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 8),
+            measurementLabel.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 11),
             measurementLabel.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -8),
             measurementLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             measurementLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.35),
             measurementLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -8),
 
             // Ingredient Label
-            ingredientLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            ingredientLabel.topAnchor.constraint(equalTo: topAnchor, constant: 11),
             ingredientLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 8),
             ingredientLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
             ingredientLabel.rightAnchor.constraint(equalTo: measurementLabel.leftAnchor, constant: -16),

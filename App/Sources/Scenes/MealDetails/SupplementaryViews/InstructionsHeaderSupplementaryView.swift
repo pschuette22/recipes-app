@@ -35,7 +35,6 @@ extension InstructionsHeaderSupplementaryView {
     struct Configuration: ViewConfiguration { }
 
     func setupSubviews() {
-        // TODO: Setup Subviews
         addSubview(headerLabel)
         headerLabel.text = "Instructions"
         headerLabel.font = UIFont.preferredFont(forTextStyle: .title2)

@@ -198,10 +198,10 @@ extension MealDetailsViewController {
                     sectionHeader.extendsBoundary = true
                     
                     let section = NSCollectionLayoutSection(group: ingredientsGroup)
-                    section.contentInsets = .init(top: 0, leading: 24, bottom: 24, trailing: 24)
+                    section.contentInsets = .init(top: 3, leading: 24, bottom: 24, trailing: 24)
 
                     let backgroundItem = NSCollectionLayoutDecorationItem.background(elementKind: Self.ingredientBackgroundKind)
-                    backgroundItem.contentInsets = .init(top: 0, leading: 16, bottom: 16, trailing: 16)
+                    backgroundItem.contentInsets = .init(top: 3, leading: 16, bottom: 16, trailing: 16)
                     section.boundarySupplementaryItems = [
                         sectionHeader
                     ]
