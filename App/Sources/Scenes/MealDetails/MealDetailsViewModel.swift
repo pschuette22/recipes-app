@@ -26,17 +26,38 @@ final class MealDetailsViewModel: ViewModeling {
         openStateStream
     }
     
-    convenience init(summary: MealSummaryModel) {
+    private let recipeId: Int
+    private let service: any RecipeService
+    private var loadTask: Task<Void, Error>?
+    
+    private var details: MealDetailModel?
+    
+    convenience init(
+        summary: MealSummaryModel,
+        service: any RecipeService = MealDBService()
+    ) {
         self.init(
+            recipeId: summary.id,
             MealDetailsState(
                 photoURL: summary.image,
                 title: summary.title
-            )
+            ),
+            service: service
         )
     }
     
-    required init(_ initialState: State) {
-        state = initialState
+    required init(
+        recipeId: Int,
+        _ initialState: State,
+        service: any RecipeService = MealDBService()
+    ) {
+        self.recipeId = recipeId
+        self.state = initialState
+        self.service = service
+    }
+    
+    deinit {
+        loadTask?.cancel()
     }
 }
 
@@ -46,5 +67,38 @@ extension MealDetailsViewModel {
     @MainActor
     func currentState() -> State {
         state
+    }
+}
+
+extension MealDetailsViewModel {
+    func viewDidLoad() {
+        fetchRecipeDetails()
+    }
+    
+    private func fetchRecipeDetails() {
+        let recipeId = self.recipeId
+        let service = self.service
+
+        loadTask = Task { [weak self] in
+            guard
+                let details = try? await service.fetchMeal(withId: recipeId)
+            else {
+                // TODO: Handle error
+                return
+            }
+            await self?.didLoad(details)
+        }
+    }
+    
+    @MainActor
+    func didLoad(_ details: MealDetailModel) {
+        self.details = details
+        let ingredients = details.ingredients.map {
+            IngredientCell.Configuration(ingredient: $0.title, measurement: $0.measurement)
+        }
+
+        state.update {
+            $0.set(ingredients: ingredients)
+        }
     }
 }
