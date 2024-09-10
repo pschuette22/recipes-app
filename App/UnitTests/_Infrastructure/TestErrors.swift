@@ -12,7 +12,7 @@ enum TestError: Error, CustomStringConvertible {
 
     var description: String {
         switch self {
-        case .failedToLoadResource(let name):
+        case let .failedToLoadResource(name):
             "Failed to load resource: " + name
         }
     }

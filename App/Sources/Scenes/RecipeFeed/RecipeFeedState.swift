@@ -1,4 +1,4 @@
-// 
+//
 //  RecipeFeedState.swift
 //  Recipes
 //

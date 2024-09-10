@@ -1,0 +1,4 @@
+# File Options
+--exclude Tuist
+--exclude App/Mocks
+--exclude Derived

@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import XCTest
 @testable import Recipes
+import XCTest
 
 final class MealDBServiceTests: XCTestCase {
     private var sessionMock: URLSessionProtocolMock!

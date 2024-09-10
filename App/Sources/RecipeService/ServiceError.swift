@@ -14,11 +14,11 @@ enum ServiceError: EquatableError {
     static func == (lhs: ServiceError, rhs: ServiceError) -> Bool {
         switch (lhs, rhs) {
         case let (.decodingError(underlyingLhs), .decodingError(underlyingRhs)):
-            return underlyingLhs.localizedDescription == underlyingRhs.localizedDescription
+            underlyingLhs.localizedDescription == underlyingRhs.localizedDescription
         case let (.malformedResponse(underlingLhs), .malformedResponse(underlyingRhs)):
-            return underlingLhs == underlyingRhs
+            underlingLhs == underlyingRhs
         default:
-            return false
+            false
         }
     }
 }

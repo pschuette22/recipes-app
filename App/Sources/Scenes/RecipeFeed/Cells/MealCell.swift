@@ -1,4 +1,4 @@
-// 
+//
 //  MealCell.swift
 //  Recipes
 //
@@ -26,7 +26,7 @@ final class MealCell: UICollectionViewCell, ConfigurableCell {
     }
 
     @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -45,6 +45,7 @@ final class MealCell: UICollectionViewCell, ConfigurableCell {
 }
 
 // MARK: - Subview
+
 extension MealCell {
     struct Configuration: ViewConfiguration {
         var image: URL
@@ -70,7 +71,7 @@ extension MealCell {
             // Title Constraints
             titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             titleLabel.leftAnchor.constraint(equalTo: imageView.rightAnchor, constant: 16),
-            titleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16)
+            titleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16),
         ])
     }
 

@@ -1,4 +1,4 @@
-// 
+//
 //  IngredientCell.swift
 //  Recipes
 //
@@ -23,12 +23,13 @@ final class IngredientCell: UICollectionViewCell, ConfigurableCell {
     }
 
     @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 // MARK: - Subview
+
 extension IngredientCell {
     struct Configuration: ViewConfiguration {
         let ingredient: String
@@ -61,7 +62,7 @@ extension IngredientCell {
             ingredientLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             ingredientLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
             ingredientLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-            ingredientLabel.rightAnchor.constraint(equalTo: measurementLabel.leftAnchor, constant: -16)
+            ingredientLabel.rightAnchor.constraint(equalTo: measurementLabel.leftAnchor, constant: -16),
         ])
     }
 

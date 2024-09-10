@@ -10,7 +10,7 @@ import UIKit
 
 extension UITraitCollection {
     var preferredShadowColor: UIColor {
-        return if userInterfaceStyle == .dark {
+        if userInterfaceStyle == .dark {
             UIColor.lightGray
         } else { // .light / .unspecified
             UIColor.darkGray

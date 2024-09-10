@@ -10,9 +10,7 @@ import UIKit
 
 extension NSCollectionLayoutSection {
     /// Zero size layout section
-    static let empty: NSCollectionLayoutSection = {
-        NSCollectionLayoutSection(
-            group: NSCollectionLayoutGroup(layoutSize: .init(widthDimension: .absolute(0), heightDimension: .absolute(0)))
-        )
-    }()
+    static let empty: NSCollectionLayoutSection = .init(
+        group: NSCollectionLayoutGroup(layoutSize: .init(widthDimension: .absolute(0), heightDimension: .absolute(0)))
+    )
 }

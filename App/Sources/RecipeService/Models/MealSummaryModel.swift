@@ -1,5 +1,5 @@
 //
-//  RecipeSummaryModel.swift
+//  MealSummaryModel.swift
 //  Recipes
 //
 //  Created by Peter Schuette on 9/6/24.

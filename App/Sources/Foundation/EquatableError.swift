@@ -7,4 +7,4 @@
 
 import Foundation
 
-protocol EquatableError: Error, Equatable { }
+protocol EquatableError: Error, Equatable {}

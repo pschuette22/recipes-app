@@ -1,4 +1,4 @@
-// 
+//
 //  IngredientsHeaderSupplementaryView.swift
 //  Recipes
 //
@@ -23,12 +23,13 @@ final class IngredientsHeaderSupplementaryView: UICollectionReusableView, Config
     }
 
     @available(*, unavailable, message: "Storyboards are not supported. Use ``init(frame:)``")
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 // MARK: - Subview
+
 extension IngredientsHeaderSupplementaryView {
     struct Configuration: ViewConfiguration {}
 
@@ -61,9 +62,9 @@ extension IngredientsHeaderSupplementaryView {
             ingredientLabel.topAnchor.constraint(equalTo: topAnchor, constant: 11),
             ingredientLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 8),
             ingredientLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
-            ingredientLabel.rightAnchor.constraint(equalTo: measurementLabel.leftAnchor, constant: -16)
+            ingredientLabel.rightAnchor.constraint(equalTo: measurementLabel.leftAnchor, constant: -16),
         ])
     }
 
-    func apply(_ configuration: Configuration) { }
+    func apply(_: Configuration) {}
 }
