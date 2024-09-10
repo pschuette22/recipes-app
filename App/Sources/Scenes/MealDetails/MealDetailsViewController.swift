@@ -127,6 +127,13 @@ extension MealDetailsViewController {
 
         headerView.set(titleTransitionPercentage: min(((height - maxY) / maxY), 1))
     }
+    
+    private func updateTitleDisplay() {
+        guard let navbarMidY = navigationController?.navigationBar.frame.midY else { return }
+        let isHeaderTitleHidden = navbarMidY > headerView.titleFrame.midY
+        headerView.set(titleIsHidden: isHeaderTitleHidden)
+        navigationItem.title = isHeaderTitleHidden ? viewModel.state.title : nil
+    }
 }
 
 // MARK: - CollectionView
@@ -291,5 +298,11 @@ extension MealDetailsViewController {
 extension MealDetailsViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         reframeHeader()
+        
+        if
+            collectionView.numberOfSections > 0 // avoid eager render on initial load
+        {
+            updateTitleDisplay()
+        }
     }
 }

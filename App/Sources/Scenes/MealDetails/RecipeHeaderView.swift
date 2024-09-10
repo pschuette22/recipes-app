@@ -15,6 +15,13 @@ final class RecipeHeaderView: UIView {
     
     @ExplicitConstraints
     private var titleLabel = UILabel(frame: .zero)
+
+    var titleFrame: CGRect {
+        return titleLabel.frame
+    }
+    
+    private var titleTransitionAnimator: UIViewPropertyAnimator?
+    private var isAnimatingHide: Bool?
     
     private var imageTask: Task<Void, Never>?
     
@@ -90,5 +97,26 @@ extension RecipeHeaderView {
     func set(titleTransitionPercentage: CGFloat) {
         let alphaPercentage = min(max(0, titleTransitionPercentage), 1)
         imageView.alpha = 0.4 + (alphaPercentage * 0.3)
+    }
+    
+    @MainActor
+    func set(titleIsHidden: Bool) {
+        guard 
+            titleIsHidden != titleLabel.isHidden,
+            titleIsHidden != isAnimatingHide
+        else { return }
+        
+        isAnimatingHide = titleIsHidden
+        titleTransitionAnimator?.stopAnimation(true)
+        titleTransitionAnimator = UIViewPropertyAnimator(duration: 0.1, curve: .easeInOut)
+        titleTransitionAnimator?.addAnimations { [titleLabel] in
+            titleLabel.alpha = titleIsHidden ? 0 : 1
+        }
+        titleTransitionAnimator?.addCompletion { [weak self] position in
+            guard position == .end else { return /* ignore cancelation */ }
+            self?.titleLabel.isHidden = titleIsHidden
+            self?.isAnimatingHide = nil
+        }
+        titleTransitionAnimator?.startAnimation()
     }
 }
