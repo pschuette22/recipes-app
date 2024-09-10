@@ -14,6 +14,7 @@ final class MealDetailsViewController: UIViewController {
     private static let pageHeaderKind = "page-header"
     private static let ingredientsHeaderKind = "ingredients-header"
     private static let ingredientBackgroundKind = "ingredients-background"
+    private static let instructionsHeaderKind = "instructions-header"
 
     private lazy var collectionView = UICollectionView(
         frame: .zero,
@@ -56,6 +57,7 @@ extension MealDetailsViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         reframeHeader()
+        navigationItem.leftBarButtonItem?.tintColor = UIColor.darkText
     }
 }
 
@@ -68,25 +70,33 @@ extension MealDetailsViewController {
         titleView.backgroundColor = .clear
         let navigationAppearance = UINavigationBarAppearance()
         navigationAppearance.configureWithTransparentBackground()
-
+        let barButtonAppearance = UIBarButtonItemAppearance(style: .plain)
+        barButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.darkText]
+        let image = UIImage(systemName: "chevron.backward")?.withTintColor(.darkText, renderingMode: .alwaysOriginal)
+        navigationAppearance.setBackIndicatorImage(image, transitionMaskImage: image)
+        navigationAppearance.backButtonAppearance = barButtonAppearance
         navigationItem.standardAppearance = navigationAppearance
         navigationItem.scrollEdgeAppearance = navigationAppearance
+        
 
         collectionView.register(HeaderAnchorSupplementaryView.self, ofKind: Self.pageHeaderKind)
         collectionView.register(IngredientsHeaderSupplementaryView.self, ofKind: Self.ingredientsHeaderKind)
+        collectionView.register(InstructionsHeaderSupplementaryView.self, ofKind: Self.instructionsHeaderKind)
         collectionView.register(IngredientCell.self)
         collectionView.register(InstructionsCell.self)
 
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = UIColor.systemBackground
+        collectionView.showsVerticalScrollIndicator = false
 
         view.addSubview(collectionView)
         view.addSubview(headerView)
 
         NSLayoutConstraint.activate([
+            // Collection view
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
-            collectionView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
+            collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            collectionView.rightAnchor.constraint(equalTo: view.rightAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             // HeaderView
             headerView.topAnchor.constraint(equalTo: collectionView.topAnchor),
@@ -117,6 +127,13 @@ extension MealDetailsViewController {
         }
 
         headerView.set(titleTransitionPercentage: min(((height - maxY) / maxY), 1))
+    }
+    
+    private func updateTitleDisplay() {
+        guard let navbarMidY = navigationController?.navigationBar.frame.midY else { return }
+        let isHeaderTitleHidden = navbarMidY > headerView.titleFrame.midY
+        headerView.set(titleIsHidden: isHeaderTitleHidden)
+        navigationItem.title = isHeaderTitleHidden ? viewModel.state.title : nil
     }
 }
 
@@ -181,10 +198,10 @@ extension MealDetailsViewController {
                     sectionHeader.extendsBoundary = true
                     
                     let section = NSCollectionLayoutSection(group: ingredientsGroup)
-                    section.contentInsets = .init(top: 0, leading: 24, bottom: 24, trailing: 24)
+                    section.contentInsets = .init(top: 3, leading: 24, bottom: 24, trailing: 24)
 
                     let backgroundItem = NSCollectionLayoutDecorationItem.background(elementKind: Self.ingredientBackgroundKind)
-                    backgroundItem.contentInsets = .init(top: 0, leading: 16, bottom: 16, trailing: 16)
+                    backgroundItem.contentInsets = .init(top: 3, leading: 16, bottom: 16, trailing: 16)
                     section.boundarySupplementaryItems = [
                         sectionHeader
                     ]
@@ -205,6 +222,20 @@ extension MealDetailsViewController {
                         subitems: [.init(layoutSize: itemSize)]
                     )
                     let section = NSCollectionLayoutSection(group: instructionGroup)
+                    
+                    let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
+                        layoutSize: .init(
+                            widthDimension: .fractionalWidth(1),
+                            heightDimension: .estimated(UIFont.preferredFont(forTextStyle: .title2).lineHeight + 24)
+                        ),
+                        elementKind: Self.instructionsHeaderKind,
+                        alignment: .top
+                    )
+                    
+                    section.boundarySupplementaryItems = [
+                        sectionHeader
+                    ]
+                    
                     section.contentInsets = .init(top: 0, leading: 24, bottom: 24, trailing: 24)
                     return section
                 }
@@ -241,14 +272,19 @@ extension MealDetailsViewController {
                     for: indexPath
                 )
             case Self.ingredientsHeaderKind:
-                let header = collection.dequeueSupplementaryView(
+                return collection.dequeueSupplementaryView(
                     IngredientsHeaderSupplementaryView.self,
                     withConfiguration: .init(),
                     ofKind: element,
                     for: indexPath
                 )
-//                header.backgroundColor = UIColor.systemGroupedBackground
-                return header
+            case Self.instructionsHeaderKind:
+                return collectionView.dequeueSupplementaryView(
+                    InstructionsHeaderSupplementaryView.self,
+                    withConfiguration: .init(),
+                    ofKind: element,
+                    for: indexPath
+                )
             default:
                 return nil
             }
@@ -263,5 +299,11 @@ extension MealDetailsViewController {
 extension MealDetailsViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         reframeHeader()
+        
+        if
+            collectionView.numberOfSections > 0 // avoid eager render on initial load
+        {
+            updateTitleDisplay()
+        }
     }
 }

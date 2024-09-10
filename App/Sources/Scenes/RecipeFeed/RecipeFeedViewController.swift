@@ -49,6 +49,14 @@ extension RecipeFeedViewController {
 extension RecipeFeedViewController {
     ///  Prepare subviews for state rendering
     private func setupSubviews() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.label]
+        appearance.backgroundColor = .systemBackground
+        navigationItem.title = "Recipes"
+        navigationItem.standardAppearance = appearance
+        navigationItem.compactAppearance = appearance
+        navigationItem.scrollEdgeAppearance = appearance
         navigationItem.backButtonTitle = ""
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(ContentLoadingCell.self)
@@ -58,8 +66,8 @@ extension RecipeFeedViewController {
         view.addSubview(collectionView)
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            collectionView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
-            collectionView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
+            collectionView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            collectionView.rightAnchor.constraint(equalTo: view.rightAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
         
@@ -114,7 +122,7 @@ extension RecipeFeedViewController {
                 case .meals:
                     let itemSize: NSCollectionLayoutSize = state.isLoadingMeals
                         ? NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(environment.container.contentSize.height - 200))
-                        : NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(132)) // 150 + 16 * 2
+                        : NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(132)) // 100 + 16 * 2
                     let group = NSCollectionLayoutGroup.vertical(
                         layoutSize: itemSize,
                         subitems: [NSCollectionLayoutItem(
@@ -155,6 +163,7 @@ extension RecipeFeedViewController: UICollectionViewDelegate {
         
         switch section {
         case .categories:
+            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
             viewModel.didSelectCategory(at: indexPath.row)
         case .meals:
             guard let mealViewModel = viewModel.viewModel(forMealAt: indexPath.row) else { return }
