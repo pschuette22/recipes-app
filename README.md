@@ -11,3 +11,4 @@ The Recipes app is assembled using [Tuist](https://tuist.io/). It can be install
 Results this project structure
 
 <img src="docs/resources/project-structure.png" alt="`make project` demo" height="200">
+
