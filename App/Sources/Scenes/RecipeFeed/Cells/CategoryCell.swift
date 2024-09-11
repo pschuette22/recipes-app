@@ -91,7 +91,7 @@ extension CategoryCell {
             titleLabel.topAnchor.constraint(equalTo: titleContainer.topAnchor, constant: 8),
             titleLabel.bottomAnchor.constraint(equalTo: titleContainer.bottomAnchor, constant: -8),
             titleLabel.leftAnchor.constraint(equalTo: titleContainer.leftAnchor, constant: 8),
-            titleLabel.rightAnchor.constraint(lessThanOrEqualTo: titleContainer.rightAnchor, constant: -8),
+            titleLabel.rightAnchor.constraint(lessThanOrEqualTo: titleContainer.rightAnchor, constant: -8)
         ])
     }
 

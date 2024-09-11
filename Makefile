@@ -1,14 +1,36 @@
-# Define the path to the Mockolo executable
-MOCKOLO=./binaries/Mockolo/mockolo
+#
+# Project
+#
+install-tuist:
+	@file_version=$$(cat .tuist-version); \
+	brew tap tuist/tuist; \
+	brew install --formula tuist@$$file_version
 
-# Define the source directory containing the interfaces to mock
-APP_SRC_DIR=App/Sources/
+check-tuist:
+	@file_version=$$(cat .tuist-version); \
+	if ! command -v tuist &> /dev/null; then \
+		echo "Missing Tuist. \"make install-tuist\""; \
+		echo "Install directly, or"; \
+		echo "run \"make install-tuist\""; \
+		exit 1; \
+	elif [ "$$(tuist version)" != "$$file_version" ]; then \
+		echo "Warning: Tuist version does not match, expected $$file_version"; \
+		echo "If you experience issues, run 'make install-tuist'"; \
+	else \
+		echo "Using Tuist $$file_version"; \
+	fi
 
-# Define the output directory for the generated mocks
-MOCKS_OUTPUT_DIR=App/Mocks
-
+project: check-tuist
+	echo "Generating project"; \
+	tuist generate
+#
+# Mocks
+#
 mocks:
-	$(MOCKOLO) -s $(APP_SRC_DIR) -d $(MOCKS_OUTPUT_DIR)/Mocks.generated.swift --header "@testable import Recipes"
+	./binaries/Mockolo/mockolo \
+	-s App/Sources/ \
+	-d App/Mocks/Mocks.generated.swift \
+	--header "@testable import Recipes"
 
 #
 # Swiftlint
@@ -16,7 +38,7 @@ mocks:
 
 install-swiftlint:
 	file_version=$$(cat .swiftlint-version); \
-	eval("brew install swiftlint@$$file_version")
+	brew install swiftlint@$$file_version
 
 check-swiftlint-version:
 	@swiftlint_version=$$(swiftlint --version); \

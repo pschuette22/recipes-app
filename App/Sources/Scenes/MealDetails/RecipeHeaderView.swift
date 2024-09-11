@@ -71,7 +71,7 @@ extension RecipeHeaderView {
             titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             titleLabel.leftAnchor.constraint(greaterThanOrEqualTo: leftAnchor, constant: 24),
-            titleLabel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -24),
+            titleLabel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -24)
         ])
     }
 
