@@ -43,7 +43,7 @@ extension ContentLoadingCell {
         contentView.addSubview(activityIndicator)
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            activityIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
         ])
     }
 

@@ -62,7 +62,7 @@ extension IngredientsHeaderSupplementaryView {
             ingredientLabel.topAnchor.constraint(equalTo: topAnchor, constant: 11),
             ingredientLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 8),
             ingredientLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
-            ingredientLabel.rightAnchor.constraint(equalTo: measurementLabel.leftAnchor, constant: -16)
+            ingredientLabel.rightAnchor.constraint(equalTo: measurementLabel.leftAnchor, constant: -16),
         ])
     }
 

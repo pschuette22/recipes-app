@@ -44,7 +44,7 @@ extension InstructionsHeaderSupplementaryView {
             headerLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
             headerLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 8),
             headerLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -8),
-            headerLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
+            headerLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
         ])
     }
 

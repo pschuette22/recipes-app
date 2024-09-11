@@ -71,7 +71,7 @@ extension MealCell {
             // Title Constraints
             titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             titleLabel.leftAnchor.constraint(equalTo: imageView.rightAnchor, constant: 16),
-            titleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16)
+            titleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16),
         ])
     }
 

@@ -62,7 +62,7 @@ extension IngredientCell {
             ingredientLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             ingredientLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
             ingredientLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-            ingredientLabel.rightAnchor.constraint(equalTo: measurementLabel.leftAnchor, constant: -16)
+            ingredientLabel.rightAnchor.constraint(equalTo: measurementLabel.leftAnchor, constant: -16),
         ])
     }
 

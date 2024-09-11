@@ -44,7 +44,7 @@ extension InstructionsCell {
             textView.topAnchor.constraint(equalTo: contentView.topAnchor),
             textView.leftAnchor.constraint(equalTo: contentView.leftAnchor),
             textView.rightAnchor.constraint(equalTo: contentView.rightAnchor),
-            textView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            textView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ])
     }
 

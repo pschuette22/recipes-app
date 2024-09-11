@@ -101,7 +101,7 @@ extension MealDetailsViewController {
             headerView.topAnchor.constraint(equalTo: collectionView.topAnchor),
             headerView.leftAnchor.constraint(equalTo: collectionView.leftAnchor),
             headerView.widthAnchor.constraint(equalTo: collectionView.widthAnchor),
-            headerHeightConstraint
+            headerHeightConstraint,
         ])
 
         collectionView.dataSource = dataSource
@@ -155,7 +155,7 @@ extension MealDetailsViewController {
         )
 
         configuration.boundarySupplementaryItems = [
-            headerItem
+            headerItem,
         ]
 
         configuration.interSectionSpacing = 16
@@ -202,10 +202,10 @@ extension MealDetailsViewController {
                     let backgroundItem = NSCollectionLayoutDecorationItem.background(elementKind: Self.ingredientBackgroundKind)
                     backgroundItem.contentInsets = .init(top: 3, leading: 16, bottom: 16, trailing: 16)
                     section.boundarySupplementaryItems = [
-                        sectionHeader
+                        sectionHeader,
                     ]
                     section.decorationItems = [
-                        backgroundItem
+                        backgroundItem,
                     ]
 
                     return section
@@ -232,7 +232,7 @@ extension MealDetailsViewController {
                     )
 
                     section.boundarySupplementaryItems = [
-                        sectionHeader
+                        sectionHeader,
                     ]
 
                     section.contentInsets = .init(top: 0, leading: 24, bottom: 24, trailing: 24)

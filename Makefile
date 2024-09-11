@@ -80,6 +80,6 @@ check-swiftformat-version:
 		exit 1; \
 	fi
 
-lint: swiftlint check-swiftformat-version
+lint: swiftlint-fix check-swiftformat-version
 	swiftformat . --config .swiftformat.yml
 	
