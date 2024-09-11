@@ -21,7 +21,7 @@ check-tuist:
 	fi
 
 project: check-tuist
-	echo "Generating project"; \
+	@echo "Generating project"; \
 	tuist generate
 #
 # Mocks
