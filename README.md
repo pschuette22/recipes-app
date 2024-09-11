@@ -15,3 +15,14 @@ Results this project structure
 Select a signing certificate and run the App
 
 <img src="docs/resources/signing-team.png" alt="Signing Team" height="500">
+
+## Usage
+### Categories
+The initial page is a list of recipes organized by category.
+
+<img src="docs/resources/categories-screen.gif" alt="Categories" height="500">
+
+### Recipe Details
+Tapping on a recipe from the list will present the recipe details where you will find a list of ingredients and instructions.
+
+<img src="docs/resources/recipe-details-screen.gif" alt="Recipe Details" height="500">
