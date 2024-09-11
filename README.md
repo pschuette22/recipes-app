@@ -10,5 +10,8 @@ The Recipes app is assembled using [Tuist](https://tuist.io/). It can be install
 
 Results this project structure
 
-<img src="docs/resources/project-structure.png" alt="`make project` demo" height="200">
+<img src="docs/resources/project-structure.png" alt="`Project Structure" height="200">
 
+Select a signing certificate and run the App
+
+<img src="docs/resources/signing-team.png" alt="Signing Team" height="500">
