@@ -83,3 +83,9 @@ check-swiftformat-version:
 lint: swiftlint-fix check-swiftformat-version
 	swiftformat . --config .swiftformat.yml
 	
+#
+# Tests
+#
+
+unit-tests: check-tuist mocks
+	tuist test
