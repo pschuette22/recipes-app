@@ -63,15 +63,18 @@ extension MealCell {
 
         NSLayoutConstraint.activate([
             // Image constraints
-            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
             imageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 16),
-            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
+            imageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             imageView.heightAnchor.constraint(equalToConstant: 100),
             imageView.widthAnchor.constraint(equalToConstant: 100),
+            imageView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 16),
+            imageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -16),
             // Title Constraints
             titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             titleLabel.leftAnchor.constraint(equalTo: imageView.rightAnchor, constant: 16),
             titleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16),
+            titleLabel.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 16),
+            titleLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -16),
         ])
     }
 
